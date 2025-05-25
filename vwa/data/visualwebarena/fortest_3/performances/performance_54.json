@@ -1,0 +1,12 @@
+{
+    "eval_configs": "configs/visualwebarena/test_classifieds_v2/54.json",
+    "llm_tokens": {
+        "gpt-4o": {
+            "completion_tokens": 192436,
+            "num_requests": 345,
+            "prompt_tokens": 2460068
+        }
+    },
+    "scores": 1.0,
+    "times": 6.395279852549235
+}

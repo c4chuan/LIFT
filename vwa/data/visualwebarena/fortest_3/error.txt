@@ -1,0 +1,45 @@
+[Config file]: /data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/data/visualwebarena/cache/37.json
+[Unhandled Error] TimeoutError('Timeout 30000ms exceeded.\n=========================== logs ===========================\nnavigating to "http://localhost:9980/", waiting until "load"\n============================================================')
+Traceback (most recent call last):
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/runners/eval/eval_vwa_ragent.py", line 285, in aevaluate_single_task
+    action = await agent.anext_action(
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/agent/rmcts_agent.py", line 495, in anext_action
+    final_action = await super().anext_action(trajectory, intent, meta_data, additional_inputs)
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/logging.py", line 76, in awrap
+    result = await afunc(*args, **kwargs)# ！！！不要忘记进入了
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/agent/mcts_agent.py", line 782, in anext_action
+    await self.reset_env(root_state, config_file, root_action_history)
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/agent/mcts_agent.py", line 656, in reset_env
+    obs, info = await env.areset(options={"config_file": config_file})
+  File "<@beartype(src.envs.browser.FastCachedwActionMatchingBrowserEnv.areset) at 0x794cfc71b6d0>", line 51, in areset
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/envs/browser.py", line 779, in areset
+    obs, info = await super().areset(seed=seed, options=options)
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/logging.py", line 76, in awrap
+    result = await afunc(*args, **kwargs)# ！！！不要忘记进入了
+  File "<@beartype(src.envs.browser.FastCachedBrowserEnv.areset) at 0x794cfc71b1c0>", line 51, in areset
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/envs/browser.py", line 585, in areset
+    await self.asetup(config_file=config_file)
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/envs/utils.py", line 81, in awrap
+    return await afunc(*args, **kwargs)
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/envs/utils.py", line 49, in awrap
+    result = await asyncio.wait_for(afunc(*args, **kwargs), timeout=seconds)
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/src/envs/browser.py", line 284, in asetup
+    await page.goto(url)
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/async_api/_generated.py", line 9251, in goto
+    await self._impl_obj.goto(
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/_impl/_page.py", line 479, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/_impl/_frame.py", line 147, in goto
+    await self._channel.send("goto", locals_to_params(locals()))
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/_impl/_connection.py", line 61, in send
+    return await self._connection.wrap_api_call(
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/_impl/_connection.py", line 482, in wrap_api_call
+    return await cb()
+  File "/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/_impl/_connection.py", line 97, in inner_send
+    result = next(iter(done)).result()
+playwright._impl._api_types.TimeoutError: Timeout 30000ms exceeded.
+=========================== logs ===========================
+navigating to "http://localhost:9980/", waiting until "load"
+============================================================

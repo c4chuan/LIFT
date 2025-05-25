@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="31a11bde-10f6-4091-9290-cc1f32325f2e" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/PULL_REQUEST_TEMPLATE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/dependabot.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/checkpoint_converter.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/dataset.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_ascend.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_dapo.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_eval_aime24.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_ppo_trainer.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_ppo_trainer_megatron.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_prime.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_sft.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/e2e_sppo.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/model.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/pre-commit-full.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/pre-commit.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/ray_cpu_test.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/ray_gpu_test.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/sandbox.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/sanity.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/scorecard.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/secrets_scan.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/sgl.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/utils_cpu_test.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/utils_gpu_test.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/vllm.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.pre-commit-config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.readthedocs.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notice.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Apptainerfile.rocm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.ngc.vllm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.ngc.vllm0.8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.ngc.vllm0.8.sagemaker" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.rocm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.sglang" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.stage1.megatron" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.stage2.megatron" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/Dockerfile.vemlp.vllm.te" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README_vllm0.7.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README_vllm0.8.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/js/runllm-widget.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/advance/checkpoint.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/advance/dpo_extension.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/advance/fsdp_extension.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/advance/megatron_extension.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/advance/placement.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/amd_tutorial/amd_build_dockerfile_page.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/amd_tutorial/amd_vllm_page.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api/trainer.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api/utils.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/conf.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/data.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/examples/config.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/examples/gsm8k_example.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/examples/multi_modal_example.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/examples/ppo_code_architecture.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/experiment/ppo.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/faq/faq.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/hybrid_flow.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/perf/device_tuning.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/perf/perf_tuning.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/preparation/prepare_data.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/preparation/reward_function.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/requirements-docs.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/sglang_multiturn/multiturn.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/start/install.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/start/multinode.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/start/quickstart.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/start/ray_debug_tutorial.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/workers/fsdp_workers.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/workers/megatron_workers.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/workers/ray_trainer.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/workers/sglang_worker.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/full_hh_rlhf.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/geo3k.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/gsm8k.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/gsm8k_multiturn_w_tool.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/hellaswag.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/math_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/data_preprocess/multiturn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/generation/run_deepseek7b_mutli_node.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/generation/run_deepseek_v2_lite_math.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_deepseek7b_llm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_deepseek7b_llm_math.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_deepseek7b_llm_math_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_deepseek7b_llm_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen2-7b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen2-7b_math.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen2-7b_math_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen2-7b_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen2-7b_sgl_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen2_5_vl-7b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/grpo_trainer/run_qwen3-8b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/naive_chat_scheduler.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_deepseek7b_llm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_deepseek7b_llm_modelscope.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_deepseek7b_llm_sp2.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_deepseek_full_hh_rlhf.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_deepseek_math_gsm8k_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_gemma.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen1.5_moe_a2.7b-gsm8k_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen2-7b_math_gsm8k_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen2-7b_rm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen2-7b_rm_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen2-7b_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen2-7b_sglang_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ppo_trainer/run_qwen2.5-32b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/ray/tutorial.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/reinforce_plus_plus_trainer/run_qwen2-7b_math_rf.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/reinforce_plus_plus_trainer/run_qwen2-7b_math_rf_baseline.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/remax_trainer/run_qwen2.5-3b_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/remax_trainer/run_qwen2.5-7b_seq_balance.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/rloo_trainer/run_qwen2-7b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/gsm8k/run_deepseek_6b7.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/gsm8k/run_gemma_2b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/gsm8k/run_gemma_7b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/gsm8k/run_qwen_05_peft.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/gsm8k/run_qwen_05_sp2.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/gsm8k/run_qwen_05_sp2_liger.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sft/multiturn/run_qwen_05_sp2.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sglang_multiturn/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sglang_multiturn/config/gsm8k_multiturn_grpo.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sglang_multiturn/config/tool_config/gsm8k_tool_config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_multiturn.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_multiturn_4xgpu.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/slurm/ray_on_slurm.slurm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/split_placement/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/split_placement/config/ppo_trainer_split.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/split_placement/main_ppo_split.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/split_placement/run_deepseek7b_llm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/split_placement/split_monkey_patch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/tuning/14b/qwen2_14b_grpo_4_h800_fsdp_vllm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/tuning/32b/qwen2_32B_grpo_8_h20_megatron_vllm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/tuning/70b/qwen2-70b_grpo_32_h20_fsdp_vllm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/tuning/70b/qwen2-70b_grpo_32_h800_fsdp_vllm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/tuning/7b/qwen2-7b_grpo_2_h800_fsdp_vllm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/config/dapo_trainer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/dapo_ray_trainer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/main_dapo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/prepare_dapo_data.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/run_dapo_early_qwen2.5_32b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/run_dapo_qwen2.5_32b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/run_dapo_wo_ds_qwen2.5_32b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/dapo/test_dapo_7b.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/drgrpo/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/config/prime_trainer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/main_prime.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/prime_core_algos.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/prime_dp_rm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/prime_fsdp_workers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/prime_ray_trainer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/prime/run_prime_qwen.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/config/evaluation.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/data_process.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/main_eval.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/reward_score.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/run_r1_distill_qwen.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/tasks/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/tasks/gpqa.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/tasks/livecodebench.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/r1/tasks/math.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/config/sppo_trainer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/dp_actor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/main_sppo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/run_qwen2.5-7b_rm.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/sppo_ray_trainer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipe/sppo/sppo_worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements_sglang.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/converter_hf_to_mcore.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/diagnose.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/model_merger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/distributed/run_all.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/distributed/test_tensor_dict.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/data/create_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/data/test.parquet" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/data/train.parquet" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/model/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/model/create_model_tokenizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/model/generation_config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/model/model.safetensors" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/model/tokenizer_config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/rl/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/arithmetic_sequence/rl/main_trainer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/check_custom_rwd_fn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/check_results.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/envs/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/envs/digit_completion/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/envs/digit_completion/task.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/envs/digit_completion/tokenizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/generation/run_gen_qwen05.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/ppo_trainer/run_function_reward.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/ppo_trainer/run_model_reward.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_dapo.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_gsm8k_fsdp_sgl_multiturn_w_tool.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_ppo_trainer_megatron.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_prime.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_r1_distill_qwen_aime24_eval.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_ray_trainer.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_ray_trainer_fire_sampling.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_ray_trainer_rmpad.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_sppo.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/run_test.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/sft/run_sft.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/e2e/sft/test_sp_loss_match.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/gpu_utility/test_memory_buffers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/gpu_utility/test_ops.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/gpu_utility/test_torch_functional.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/kill_github_tests.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/models/test_transformer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/models/test_transformers_ulysses.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_cpu/check_worker_alive/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_cpu/test_auto_padding.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_cpu/test_check_worker_alive.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_cpu/test_decorator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_cpu/test_fused_workers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_cpu/test_ray_local_envs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/detached_worker/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/detached_worker/client.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/detached_worker/run.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/detached_worker/server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_colocated_workers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_colocated_workers_fused.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_data_transfer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_driverfunc_to_worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_high_level_scheduling_api.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_rvdz.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_worker_group_basics.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ray_gpu/test_worker_group_torch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/sandbox/test_sandbox.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/sanity/check_license.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/sanity/test_import.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/single_controller/base/test_decorator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_protocol.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/trainer/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/trainer/ppo/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/trainer/ppo/test_metric_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/cpu_tests/test_fs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/cpu_tests/test_import_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/cpu_tests/test_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/cpu_tests/test_module.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/cpu_tests/test_timeout_decorator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/checkpoint/test_fsdp_ckpt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/dataset/test_multiturn_sft_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/dataset/test_rl_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/dataset/test_rm_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/dataset/test_sft_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/test_flops_counter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/test_seqlen_balancing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/utils/gpu_tests/test_torch_functional.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/async_rollout_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/run_fsdp_vllm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_hf_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_sglang_async_rollout_w_tools.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_sglang_async_spmd.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_sglang_spmd.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_vllm_hf_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_vllm_multi_turn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_vllm_spmd.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/test_vllm_tool_calling.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/workers/rollout/utils_sglang.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/checkpoint_utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/checkpoint_utils/llama_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/checkpoint_utils/llama_loader_depracated.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/checkpoint_utils/llama_saver.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/layers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/layers/parallel_attention.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/layers/parallel_decoder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/layers/parallel_linear.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/layers/parallel_mlp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/layers/parallel_rmsnorm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/llama/megatron/modeling_llama_megatron.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/config_converter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/model_forward.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/model_initializer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/registry.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/saver.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/util.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/mcore/weight_converter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/checkpoint_utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/checkpoint_utils/qwen2_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/checkpoint_utils/qwen2_loader_depracated.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/checkpoint_utils/qwen2_saver.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/layers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/layers/parallel_attention.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/layers/parallel_decoder.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/layers/parallel_linear.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/layers/parallel_mlp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/layers/parallel_rmsnorm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/qwen2/megatron/modeling_qwen2_megatron.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/registry.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/transformers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/transformers/llama.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/transformers/monkey_patch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/transformers/qwen2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/transformers/qwen2_vl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/models/weight_loader_registry.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/protocol.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/decorator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/megatron/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/megatron/worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/megatron/worker_group.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/register_center/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/register_center/ray.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/base/worker_group.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/ray/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/ray/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/single_controller/ray/megatron.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/sglang/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/sglang/parallel_state.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/arg_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/dtensor_weight_loaders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/hf_weight_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/llm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/llm_engine_sp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/megatron_weight_loaders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/model_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/model_runner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/parallel_state.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/spmd_gpu_executor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/tokenizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_5_4/worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/arg_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/dtensor_weight_loaders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/hf_weight_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/llm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/llm_engine_sp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/megatron_weight_loaders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/model_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/model_runner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/parallel_state.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/spmd_gpu_executor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/tokenizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/third_party/vllm/vllm_v_0_6_3/worker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/tools/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/tools/base_tool.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/tools/gsm8k_tool.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/tools/schemas.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/config/evaluation.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/config/generation.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/config/ppo_megatron_trainer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/config/ppo_trainer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/config/sft_trainer.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/fsdp_sft_trainer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/main_eval.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/main_generation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/main_ppo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/ppo/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/ppo/core_algos.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/ppo/metric_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/ppo/ray_trainer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/ppo/reward.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/trainer/runtime_env.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/checkpoint/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/checkpoint/checkpoint_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/checkpoint/fsdp_checkpoint_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/checkpoint/megatron_checkpoint_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/multiturn_sft_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/rl_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/rm_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/sft_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/dataset/vision_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/debug/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/debug/performance.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/debug/profile.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/debug/trajectory_tracker.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/distributed.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/flops_counter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/fs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/fsdp_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/hdfs_io.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/import_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/logger/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/logger/aggregate_logger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/logging_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron/memory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron/optimizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron/pipeline_parallel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron/sequence_parallel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron/tensor_parallel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/megatron_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/memory_buffer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/metric/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/metric/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/net_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/py_functional.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/ray_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/rendezvous/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/rendezvous/ray_backend.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/geo3k.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/gsm8k.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/math.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/math_batch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/math_dapo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/math_verify.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/prime_code/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/prime_code/testing_util.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/prime_code/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/prime_math/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/prime_math/grader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/reward_score/prime_math/math_normalize.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/seqlen_balancing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/tokenizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/torch_dtypes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/torch_functional.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/tracking.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/ulysses.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/utils/vllm_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/version/version" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/actor/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/actor/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/actor/dp_actor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/actor/megatron_actor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/critic/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/critic/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/critic/dp_critic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/critic/megatron_critic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/fsdp_workers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/megatron_workers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_manager/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_manager/batch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_manager/dapo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_manager/naive.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_manager/prime.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_model/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_model/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_model/megatron/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/reward_model/megatron/reward_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/async_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/hf_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/naive/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/naive/naive_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/schemas.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/sglang_rollout/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/sglang_rollout/async_sglang_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/sglang_rollout/sglang_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/tokenizer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/vllm_rollout/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/vllm_rollout/fire_vllm_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/vllm_rollout/vllm_async_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/vllm_rollout/vllm_rollout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/rollout/vllm_rollout/vllm_rollout_spmd.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/fsdp_sglang.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/fsdp_ulysses.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/fsdp_vllm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/megatron_sglang.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verl/workers/sharding_manager/megatron_vllm.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/asyncio/futures.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/asyncio/tasks.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/evaluate/loading.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/gymnasium/core.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/playwright/_impl/_helper.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/transformers/feature_extraction_utils.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/transformers/image_processing_utils.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/transformers/models/qwen2_5_vl/processing_qwen2_5_vl.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/transformers/models/qwen2_vl/image_processing_qwen2_vl.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/urllib3/__init__.py" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2x8CSZ8uybfttA8jPTEAJ9n72Ay" />
+  <component name="ProjectViewState">
+    <option name="foldersAlwaysOnTop" value="false" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="sortKey" value="BY_TIME_ASCENDING" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python 测试.Python 测试 (eval_vwa_ragent.py 内).executor&quot;: &quot;Run&quot;,
+    &quot;Python.auto_login.executor&quot;: &quot;Run&quot;,
+    &quot;Python.eval_vwa_ragent.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.generate_test_configs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Python.main.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.sample.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.t.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/data/wangzhenchuan/anaconda3/envs/vwa/lib/python3.10/site-packages/transformers/models/qwen2_vl&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+    <layout>
+      <window_info id="Bookmarks" side_tool="true" />
+      <window_info id="Merge Requests" />
+      <window_info id="Commit_Guest" show_stripe_button="false" />
+      <window_info id="Pull Requests" />
+      <window_info id="Learn" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12182617" />
+      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="TypeScript" />
+      <window_info anchor="bottom" id="TODO" />
+      <window_info anchor="bottom" id="File Transfer" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.39266306" />
+      <window_info anchor="bottom" id="Services" order="4" weight="0.6009964" />
+      <window_info anchor="bottom" id="Python Packages" order="5" weight="0.1" />
+      <window_info anchor="bottom" id="Debug" order="6" weight="0.39266306" />
+      <window_info anchor="bottom" id="HfCacheToolWindow" order="7" weight="0.3428442" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.1" />
+      <window_info anchor="bottom" id="Run" order="9" weight="0.41530797" />
+      <window_info anchor="bottom" id="Find" order="9" weight="0.33016306" />
+      <window_info anchor="right" id="Endpoints" />
+      <window_info anchor="right" id="Coverage" side_tool="true" />
+      <window_info anchor="right" id="SciView" />
+      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+      <window_info anchor="right" id="Code Search" order="5" weight="0.32045278" />
+      <window_info anchor="right" id="Plots" order="6" weight="0.1" />
+    </layout>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/vwa/ExACT" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/rl" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main">
+    <configuration name="eval_vwa_ragent" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="LIFT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="AGENT_LLM_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="AGENT_LLM_API_KEY" value="sk-wcocXg4QpDIPzNwzMOObDquizEAg7HbBkF4RpkvpEFlR2lNn" />
+        <env name="CLASSIFIEDS" value="http://192.168.1.12:9980" />
+        <env name="CLASSIFIEDS_RESET_TOKEN" value="4b61655535e7ed388f0d40a93600254c" />
+        <env name="CUDA_VISIBLE_DEVICES" value="0" />
+        <env name="DATASET" value="visualwebarena" />
+        <env name="DEBUG" value="False" />
+        <env name="EMBEDDING_MODEL_PROVIDER" value="openai" />
+        <env name="EVAL_GPU_IDX" value="0" />
+        <env name="GITLAB" value="http://192.168.1.12:8023" />
+        <env name="HF_ENDPOINT" value="https://alpha.hf-mirror.com" />
+        <env name="HOMEPAGE" value="http://192.168.1.12:4399" />
+        <env name="MAP" value="http://192.168.1.12:3000" />
+        <env name="OPENAI_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="OPENAI_API_KEY" value="sk-wcocXg4QpDIPzNwzMOObDquizEAg7HbBkF4RpkvpEFlR2lNn" />
+        <env name="PROVIDER" value="openai" />
+        <env name="PYTHONPATH" value="$(pwd)" />
+        <env name="QT_QPA_PLATFORM_PLUGIN_PATH" value="$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/cv2/qt" />
+        <env name="REDDIT" value="http://192.168.12:9999" />
+        <env name="RLM_PROVIDER" value="openai" />
+        <env name="SHOPPING" value="http://192.168.1.12:7770" />
+        <env name="SHOPPING_ADMIN" value="http://192.168.1.12:7780/admin" />
+        <env name="VALUE_FUNC_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="VALUE_FUNC_PROVIDER" value="openai" />
+        <env name="WIKIPEDIA" value="http://192.168.1.12:8888" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/vwa" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/vwa/runners/eval/eval_vwa_ragent.py" />
+      <option name="PARAMETERS" value="--instruction_path &quot;src/prompts/vwa/jsons/p_som_cot_id_actree_3s_final.json&quot; --test_idx &quot;32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54&quot; --model &quot;gpt-4o&quot; --provider &quot;openai&quot; --agent_type &quot;rmcts_mad&quot; --prompt_constructor_type ReinforcedPolicyPConstructor --puct 1.0 --branching_factor 5 --vf_budget 20 --time_budget 2.5 --max_reflections_per_task 3 --reflection_threshold 0.5 --value_function &quot;gpt-4o&quot; --value_function_method ReinforcedDebateValueFunction --value_max_reflections_per_task 1 --value_reflection_threshold 0.5 --rlm_model &quot;gpt-4o&quot; --rlm_provider &quot;openai&quot; --embedding_provider &quot;openai&quot; --embedding_model &quot;text-embedding-3-small&quot; --db_path data/visualwebarena/fortest/db --result_dir data/visualwebarena/fortest --test_config_base_dir &quot;configs/visualwebarena/test_classifieds_v2&quot; --repeating_action_failure_th 5 --viewport_height 2048 --max_obs_length 3840 --action_set_tag som --observation_type image_som --top_p 0.95 --temperature 1.0 --max_steps 15" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="generate_test_configs" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="LIFT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="AGENT_LLM_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="AGENT_LLM_API_KEY" value="sk-wcocXg4QpDIPzNwzMOObDquizEAg7HbBkF4RpkvpEFlR2lNn" />
+        <env name="CLASSIFIEDS" value="http://192.168.1.12:9980" />
+        <env name="CLASSIFIEDS_RESET_TOKEN" value="4b61655535e7ed388f0d40a93600254c" />
+        <env name="CUDA_VISIBLE_DEVICES" value="7" />
+        <env name="DATASET" value="visualwebarena" />
+        <env name="DEBUG" value="False" />
+        <env name="EMBEDDING_MODEL_PROVIDER" value="openai" />
+        <env name="EVAL_GPU_IDX" value="0" />
+        <env name="GITLAB" value="http://192.168.1.12:8023" />
+        <env name="HOMEPAGE" value="http://192.168.1.12:4399" />
+        <env name="MAP" value="http://192.168.1.12:3000" />
+        <env name="OPENAI_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="OPENAI_API_KEY" value="sk-wcocXg4QpDIPzNwzMOObDquizEAg7HbBkF4RpkvpEFlR2lNn" />
+        <env name="PROVIDER" value="openai" />
+        <env name="PYTHONPATH" value="$(pwd)" />
+        <env name="QT_QPA_PLATFORM_PLUGIN_PATH" value="$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/cv2/qt" />
+        <env name="REDDIT" value="http://192.168.12:9999" />
+        <env name="RLM_PROVIDER" value="openai" />
+        <env name="SHOPPING" value="http://192.168.1.12:7770" />
+        <env name="SHOPPING_ADMIN" value="http://192.168.1.12:7780/admin" />
+        <env name="VALUE_FUNC_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="VALUE_FUNC_PROVIDER" value="openai" />
+        <env name="WIKIPEDIA" value="http://192.168.1.12:8888" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/vwa" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/vwa/runners/utils/generate_test_configs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="LIFT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="AGENT_LLM_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="AGENT_LLM_API_KEY" value="sk-wcocXg4QpDIPzNwzMOObDquizEAg7HbBkF4RpkvpEFlR2lNn" />
+        <env name="CLASSIFIEDS" value="http://192.168.1.12:9980" />
+        <env name="CLASSIFIEDS_RESET_TOKEN" value="4b61655535e7ed388f0d40a93600254c" />
+        <env name="CUDA_VISIBLE_DEVICES" value="4,5" />
+        <env name="DASHSCOPE_API_KEY" value="sk-667dbe0bc8f74a0ba832a2b0611f2d08" />
+        <env name="DATASET" value="visualwebarena" />
+        <env name="DEBUG" value="False" />
+        <env name="EMBEDDING_MODEL_PROVIDER" value="openai" />
+        <env name="EVAL_GPU_IDX" value="0" />
+        <env name="GITLAB" value="http://192.168.1.12:8023" />
+        <env name="HF_ENDPOINT" value="https://alpha.hf-mirror.com" />
+        <env name="HOMEPAGE" value="http://192.168.1.12:4399" />
+        <env name="MAP" value="http://192.168.1.12:3000" />
+        <env name="OPENAI_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="OPENAI_API_KEY" value="sk-wcocXg4QpDIPzNwzMOObDquizEAg7HbBkF4RpkvpEFlR2lNn" />
+        <env name="PROVIDER" value="openai" />
+        <env name="PYTHONPATH" value="$(pwd)" />
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="QT_QPA_PLATFORM_PLUGIN_PATH" value="$USER_HOME$/anaconda3/envs/vwa/lib/python3.10/site-packages/cv2/qt" />
+        <env name="REDDIT" value="http://192.168.12:9999" />
+        <env name="RLM_PROVIDER" value="openai" />
+        <env name="SHOPPING" value="http://192.168.1.12:7770" />
+        <env name="SHOPPING_ADMIN" value="http://192.168.1.12:7780/admin" />
+        <env name="VALUE_FUNC_API_BASE" value="https://xiaoai.plus/v1" />
+        <env name="VALUE_FUNC_PROVIDER" value="openai" />
+        <env name="WIKIPEDIA" value="http://192.168.1.12:8888" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="LIFT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="sample" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="LIFT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/utils/sample.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="t" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="LIFT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/t.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.vwa" />
+      <item itemvalue="Python.sample" />
+      <item itemvalue="Python.t" />
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.eval_vwa_ragent" />
+      <item itemvalue="Python.generate_test_configs" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.sample" />
+        <item itemvalue="Python.t" />
+        <item itemvalue="Python.eval_vwa_ragent" />
+        <item itemvalue="Python.generate_test_configs" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.26053.29" />
+        <option value="bundled-python-sdk-b1dbf8ef85a6-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.26053.29" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="31a11bde-10f6-4091-9290-cc1f32325f2e" name="更改" comment="" />
+      <created>1747310315255</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747310315255</updated>
+      <workItem from="1747310316804" duration="40325000" />
+      <workItem from="1747666713991" duration="26557000" />
+      <workItem from="1747814063402" duration="16000" />
+      <workItem from="1747814175742" duration="1348000" />
+      <workItem from="1747834752930" duration="22507000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/vwa/runners/eval/eval_vwa_ragent.py</url>
+          <line>625</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/vwa/runners/eval/eval_vwa_ragent.py</url>
+          <line>151</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/vwa/runners/eval/eval_vwa_ragent.py</url>
+          <line>253</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/anaconda3/envs/visualizer/lib/python3.10/site-packages/transformers/models/qwen2_vl/image_processing_qwen2_vl.py</url>
+          <line>274</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/t.py</url>
+          <line>6</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/utils/sample.py</url>
+          <line>16</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/LIFT$t.coverage" NAME="t 覆盖结果" MODIFIED="1747838945520" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/LIFT$eval_vwa_ragent.coverage" NAME="eval_vwa_ragent 覆盖结果" MODIFIED="1747534235957" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vwa" />
+    <SUITE FILE_PATH="coverage/LIFT$generate_test_configs.coverage" NAME="generate_test_configs 覆盖结果" MODIFIED="1747484559704" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vwa" />
+    <SUITE FILE_PATH="coverage/LIFT$.coverage" NAME=" 覆盖结果" MODIFIED="1747318114870" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vwa/runners/eval" />
+    <SUITE FILE_PATH="coverage/LIFT$sample.coverage" NAME="sample 覆盖结果" MODIFIED="1747903634679" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/utils" />
+    <SUITE FILE_PATH="coverage/LIFT$main__1_.coverage" NAME="main 覆盖结果" MODIFIED="1747472425803" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/LIFT$auto_login.coverage" NAME="auto_login 覆盖结果" MODIFIED="1747313564234" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/vwa" />
+    <SUITE FILE_PATH="coverage/LIFT$main.coverage" NAME="main 覆盖结果" MODIFIED="1748157153361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+  </component>
+</project>
