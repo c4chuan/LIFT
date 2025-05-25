@@ -1,8 +1,0 @@
-digraph {
-	node [shape=box]
-	ranksep="5.0"
-	nodesep="9.0"
-	1 [label="v=0.0, Ns=12" image="/data/wangzhenchuan/Projects/GUI_Agent/visualwebarena/data/visualwebarena/fortest/tmp_images/20250419-144828_node_1_p382178.png"]
-	2 [label=stop]
-	1 -> 2 [label="Retrieved Reflections=\l\l======\lQ=0.00, V next=0.0, N next=0, p(Action)=0.00\lV next debate=\l\l======\lAction=none\lReasoning=ERROR\l"]
-}
