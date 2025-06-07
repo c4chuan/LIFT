@@ -4,3 +4,7 @@ data
 results
 rl
 vwa
+.idea
+vllm
+transformers
+Qwen

@@ -1,4 +1,7 @@
-import torch,subprocess,requests,asyncio
+import os.path
+
+import cv2
+import torch,subprocess,requests,asyncio,pickle
 from PIL import Image
 from prompts.prompt_construct import PromptConstructor
 from utils.data_tools import *
@@ -6,21 +9,19 @@ from utils.sample import ResponseSampler
 from vwa.browser_env.auto_login import get_site_comb_from_filepath
 from vwa.src.envs.browser import FastCachedwActionMatchingBrowserEnv
 from vwa.src.evaluation import image_utils
+from src.reward.rewarder import Rewarder
 def env_construct():
     """ 有一些参数没做处理 """
 
     # 建立环境
     device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
     dtype = torch.float16 if torch.cuda.is_available() else torch.float32
-    caption_image_fn = image_utils.get_captioning_fn(
-        device, dtype, 'Salesforce/blip2-flan-t5-xl'
-    )
 
     env = FastCachedwActionMatchingBrowserEnv(
         headless=True,  # 用无头模式
         slow_mo=0,
         action_set_tag='som',  # used by action caching
-        observation_type='image_som',
+        observation_type='image_som_without_caption',
         current_viewport_only=True,
         viewport_size={
             "width": 1280,
@@ -28,9 +29,6 @@ def env_construct():
         },
         save_trace_enabled=False,
         sleep_after_execution=2.5,
-        # NOTE: captioning_fn here is used for LLM + captioning baselines.
-        # This can be different from the captioning model used for evals.
-        captioning_fn=caption_image_fn,
     )
     return env
 def task_prepare(cache_dir,task):
@@ -124,17 +122,49 @@ async def asingle_task(task):
     env = env_construct()  # 建立环境
     obs, info = await env.areset(options={"config_file": config_file})  # 环境重置
 
-    for step in range(10): # max step num
+    # 初始化Rewarder
+    rewarder = Rewarder("/data/wangzhenchuan/.cache/modelscope/hub/models/Qwen/Qwen2.5-VL-7B-Instruct")
+    for step in range(1): # max step num
         # 根据环境的obs建prompt
         pt_constructor = PromptConstructor(results_dir)
         messages = pt_constructor.construct_prompt(task,obs, info, trajectory, guidance='LIFT',examples='LIFT')
+        # 以pickle的形式保存messages
+        with open(f"../data/messages.pkl", "wb") as f:
+            pickle.dump(messages, f)
         # 根据prompt采样回答
-        sampler = ResponseSampler(model_path="/data/wangzhenchuan/.cache/modelscope/hub/models/Qwen/Qwen2.5-VL-7B-Instruct")
-        response = sampler.sample(messages=messages,n=5)
+        num_sample = 5
+        # sampler = ResponseSampler(model_path="/data/wangzhenchuan/.cache/modelscope/hub/models/Qwen/Qwen2.5-VL-7B-Instruct")
+        # response = sampler.sample(messages=messages,n=num_sample)
+        payload = {
+            "messages": messages,
+            "n": 5  # 想要的样本数量，可改
+        }
+        response = requests.post(url = "http://localhost:7451/sample", data=json.dumps(payload))
+        response_texts = response.json()['samples']
         print(response)
         # 根据回答生成reward
-        pass
+        reward = -1
+        action_index = -1
+        for index in range(num_sample):
+            response_text = response_texts[index]
+            save_dir = f'../results/response{index}'
+            if not os.path.exists(save_dir):
+                os.mkdir(save_dir)
+            image_path = save_dir+'/o_image.png'
+            cv2.imwrite(image_path,cv2.cvtColor(obs['image'],cv2.COLOR_BGR2RGB))
+            shift_reward,zoom_reward = rewarder.reward(response_text,image_path,visualize=True,visual_save=save_dir)
+            with open(save_dir+'/response.txt','w',encoding='utf-8') as f:
+                f.write(response_text)
+            with open(save_dir+'/message.txt','w',encoding='utf-8') as f:
+                f.write(messages[-1]['content'][0]['text'])
+            print(f'response{index}的shift_reward是{shift_reward},zoom_reward是{zoom_reward}')
+            cur_reward = shift_reward+zoom_reward
+            if cur_reward > reward:
+                reward = cur_reward
+                action_index = index
         # reward最高的action作为env step
+        action_text = response_texts[action_index]
+
 if __name__ == '__main__':
 
     # 参数
@@ -144,8 +174,9 @@ if __name__ == '__main__':
     # 获取数据,train_data是一个hf dataset
     train_task = dataset_construct()
 
-    for epoch in range(10):
-        idx = range(epoch*5, epoch*5+5) # 每次取5个数据
+    num_task =1
+    for epoch in range(1):
+        idx = range(epoch*num_task, epoch*num_task+num_task) # 每次取5个数据
         sampled_task = train_task.select(list(idx)) # 从train_data中取出数据
 
         for _,task in enumerate(sampled_task):

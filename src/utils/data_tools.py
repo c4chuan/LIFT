@@ -2,7 +2,7 @@ import os
 import json
 from datasets import Dataset
 
-def dataset_construct(config_path = "../vwa/configs/visualwebarena/test_classifieds_v2", data_path = None):
+def dataset_construct(config_path = "/data/wangzhenchuan/Projects/LIFT/vwa/configs/visualwebarena/test_classifieds_v2", data_path = None):
     """
     读取 config_path 目录下所有 .json 文件，
     并通过 load_dataset 直接构造一个 Hugging Face Dataset.

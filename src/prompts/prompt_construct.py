@@ -1,6 +1,7 @@
 import os.path
 
 import cv2
+import re
 
 from src.prompts.prompts import GUIDANCE,EXAMPLES,TEMPLATE
 
@@ -101,3 +102,12 @@ class PromptConstructor:
             return 'None'
         else:
             return trajectory[-1]['action']
+
+    def extract_action(self,response):
+        # find the first occurence of action
+        pattern = rf"```((.|\n)*?)```"
+        match = re.search(pattern, response)
+        if match:
+            return match.group(1).strip()
+        else:
+            return None

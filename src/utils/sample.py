@@ -47,7 +47,7 @@ class ResponseSampler:
     def _load_model(self, model_path):
         model = LLM(
             model=model_path,
-            limit_mm_per_prompt={"image": 10, "video": 10},
+            limit_mm_per_prompt={"image": 2, "video": 0},
         )
 
         processor = AutoProcessor.from_pretrained(model_path)
