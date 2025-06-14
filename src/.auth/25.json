@@ -1,0 +1,62 @@
+{
+    "comments": "http://localhost:9980/index.php?page=item&id=49894",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "1 |OR| one"
+            ]
+        },
+        "reference_url": "",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": "were posted on 16th November 2023",
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "red boats",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "How many red boats were posted on 16th November 2023?",
+    "intent_template": "How many {{item}} {{criteria}}?",
+    "intent_template_id": 10,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 25,
+    "visual_difficulty": "easy"
+}

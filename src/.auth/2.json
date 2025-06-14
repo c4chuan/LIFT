@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=10066",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "most recently posted",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "item in the \"Jewelry\" category with a red gem",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": "$300 to $600",
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find me the most recently posted item in the \"Jewelry\" category with a red gem. It should be between $300 to $600. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find me the {{attribute}} {{item}}. It should be between {{range}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 1,
+    "old_intent": "Find me the most recently posted item in the \"Jewelry\" category with a red gem. It should be between $300 to $600.",
+    "old_intent_template": "Find me the {{attribute}} {{item}}. It should be between {{range}}.",
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 2,
+    "visual_difficulty": "easy"
+}

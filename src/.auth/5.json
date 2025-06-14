@@ -1,0 +1,68 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "404"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=84144"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": "delete it",
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "of the white car",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Navigate to my listing of the white car and delete it.",
+    "intent_template": "Navigate to my listing {{item}} and {{action}}.",
+    "intent_template_id": 2,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": true,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 5,
+    "visual_difficulty": "easy"
+}

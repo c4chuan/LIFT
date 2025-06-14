@@ -1,0 +1,68 @@
+{
+    "comments": "http://localhost:9980/index.php?page=item&id=47273",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "$250"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=47273"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "the latest listing of a white Google Pixel phone",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find the latest listing of a white Google Pixel phone and post a comment offering $10 less than their asking price.",
+    "intent_template": "Find {{item}} and post a comment offering $10 less than their asking price.",
+    "intent_template_id": 12,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": true,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 31,
+    "visual_difficulty": "easy"
+}

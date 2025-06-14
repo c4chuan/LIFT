@@ -1,0 +1,62 @@
+{
+    "comments": "http://localhost:9980/index.php?page=item&id=32934 and http://localhost:9980/index.php?page=item&id=74707 and http://localhost:9980/index.php?page=item&id=32672",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "3 |OR| three"
+            ]
+        },
+        "reference_url": "",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": "show the interior of the car",
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "of the listings in \"Rvs + campers\" posted on 16th November 2023",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "How many of the listings in \"Rvs + campers\" posted on 16th November 2023 show the interior of the car?",
+    "intent_template": "How many {{item}} {{criteria}}?",
+    "intent_template_id": 10,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 27,
+    "visual_difficulty": "medium"
+}

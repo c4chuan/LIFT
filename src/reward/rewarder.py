@@ -11,7 +11,7 @@ from src.utils.visualize_tools import show_mask_on_image
 
 
 class Rewarder:
-    def __init__(self, model_path):
+    def __init__(self, model_path = "/data/wangzhenchuan/.cache/modelscope/hub/models/Qwen/Qwen2___5-VL-7B-Instruct"):
         tokenizer, model, processor, context_len = self._load_vlm_model(model_path)
         self.model = model
         self.tokenizer = tokenizer
@@ -34,11 +34,20 @@ class Rewarder:
 
         return tokenizer, model, processor, context_len
 
+    def batch_reward(self,responses, image_paths, visualize = False, visual_save = None):
+        """基于reward函数的相同逻辑，并行处理多个response"""
+
+
     def reward(self,response,image_path,visualize = False,visual_save = None):
         """
         response: 模型输出的text tokens
         image: 对应的环境的截图
         """
+        # reset peak-memory stats on this device
+        device = self.model.device
+        if torch.cuda.is_available() and device.type == 'cuda':
+            torch.cuda.reset_peak_memory_stats(device)
+
         # 1. 从response中提取标签,组装新的input_text,并提取出观察序列
         processed_input,obs_seq = self._get_processed_input(response)
 
@@ -51,6 +60,11 @@ class Rewarder:
 
         # 4. 计算reward
         shift_reward,zoom_reward = self._compute_reward(obs_seq,processed_input,outputs,visualize,visual_save)
+        # query peak GPU memory
+        if torch.cuda.is_available() and device.type == 'cuda':
+            peak_bytes = torch.cuda.max_memory_allocated(device)
+            peak_mib = peak_bytes / (1024 ** 2)
+            print(f"[Rewarder] Peak GPU memory during reward(): {peak_mib:.1f} MiB")
 
         return shift_reward,zoom_reward
 
@@ -224,38 +238,37 @@ class Rewarder:
 
         # 初始化history为均匀分布
         N = obs_attn_seq[0].size(0)
-        history = torch.ones_like(obs_attn_seq[0]) / N
+        history = torch.zeros_like(obs_attn_seq[0])
 
-        shift_reward = 0 # 初始化shift_reward
-        zoom_reward = 0 # 初始化zoom_reward
-        temp_H = self._entropy(torch.ones_like(obs_attn_seq[0]) / N)  # 用于保存上一段obs的熵
+        shift_rewards = 0 # 初始化shift_reward
+        zoom_rewards = 0 # 初始化zoom_reward
 
         for index,tag in enumerate(obs_tag_seq):
 
-            cat_cur = obs_attn_seq[index]/obs_attn_seq[index].sum()
+            cur_attn = obs_attn_seq[index]
             # 首先，obs_seq每一个元素都是一段观察的文本+对应的tag(<zoom in>还是<shift>)
             if tag == 'shift':
                 # 计算该段obs与history的KL散度
-                cat_history = history/history.sum()
-                shift_reward += self._compute_shift_reward(cat_cur,cat_history)
+                if index == 0:
+                    avg_history = torch.ones_like(obs_attn_seq[0])/N
+                else:
+                    avg_history = history/index
+                comp_avg_history = avg_history.max() - avg_history
+                shift_rewards += self._containing_degree(cur_attn,comp_avg_history)
 
             elif tag == 'zoom in':
                 # 计算该段obs的attention与上一段obs的attention的包含度，即余弦相似度
                 if index == 0:
-                    cat_history = history/history.sum()
-                    jaccard_weight = self._weighted_jaccard(cat_cur,cat_history)
+                    avg_history = torch.ones_like(obs_attn_seq[0])/N
+                    zoom_reward = self._containing_degree(cur_attn,avg_history)
                 else:
-                    cat_prev = obs_attn_seq[index-1] / obs_attn_seq[index-1].sum()
-                    jaccard_weight = self._weighted_jaccard(cat_cur,cat_prev)
-                # 熵的增量即，把当前obs的attn的每一维当做一个概率，用熵的计算公式计算attn的熵和上一个动作的熵做减法
-                H_curr = self._entropy(cat_cur)
-                entropy_change = temp_H-H_curr
-                # 将包含度与熵增量相乘
-                zoom_reward += jaccard_weight * entropy_change
+                    prev_attn = obs_attn_seq[index-1]
+                    zoom_reward = self._containing_degree(cur_attn,prev_attn)
+
+                zoom_rewards += zoom_reward
 
             # 计算后，将该段obs的attention加入历史
             history += obs_attn_seq[index]
-            temp_H = self._entropy(cat_cur)
 
             # 是否需要可视化
             if visualize:
@@ -266,16 +279,18 @@ class Rewarder:
                     cv2.imwrite(f'{visual_save}/{tag}_{index}.png',heated_image)
 
 
-        # 返回reward
-        return shift_reward, zoom_reward
+        # log平缓
+        shift_rewards,zoom_rewards = self._log_smooth(shift_rewards,zoom_rewards)
+        return shift_rewards, zoom_rewards
 
-    def _compute_shift_reward(self,obs,history):
-        # """直接KL散度"""
-        # log_obs_probs = torch.log(obs)
-        #
-        # return F.kl_div(history, log_obs_probs)
-        """直接1/余弦相似度"""
-        return 1/F.cosine_similarity(obs,history,dim=0)
+    def _log_smooth(self,shift_rewards,zoom_rewards):
+        """log平缓"""
+        return np.log2(shift_rewards), np.log2(zoom_rewards)
+
+    def _compute_shift_reward(self,obs_attn,avg_history_attn):
+        """计算与历史的补集的包含度"""
+        return self._containing_degree(obs_attn,avg_history_attn)
+
 
     def visualize(self,outputs,attn):
         """可视化这一整段obs对于图片的Attention"""
@@ -294,12 +309,11 @@ class Rewarder:
 
         return img_with_attn
 
-    def _weighted_jaccard(self,x, y):
+    def _containing_degree(self,x, y):
         """
-        计算两个同长度、非负的一维 tensor x 和 y 之间的加权 Jaccard 相似度。
-        返回值为标量 tensor。
+        计算两个集合之间的包含度
 
-        Jaccard = sum_i min(x_i, y_i) / sum_i max(x_i, y_i)
+        containing_degree= sum_i min(x_i, y_i) / sum(x)
 
         要求：
           - x.shape == y.shape
@@ -312,8 +326,6 @@ class Rewarder:
         返回:
           - torch.Tensor，标量，加权 Jaccard 相似度
         """
-        x = F.softmax(x)
-        y = F.softmax(y)
         # 检查形状一致
         if x.shape != y.shape:
             raise ValueError(f"输入张量形状不一致：x.shape={x.shape}, y.shape={y.shape}")
@@ -328,13 +340,6 @@ class Rewarder:
 
         # 计算对应元素的 min 和 max，并累加
         intersect = torch.min(x, y).sum()
-        union = torch.max(x, y).sum()
-
-        # 如果 union 全为 0，则认为相似度为 1（此时 x 和 y 都全是零向量）
-        if union.item() == 0:
-            return torch.tensor(1.0, dtype=x.dtype)
+        union = x.sum()
 
         return intersect / union
-
-    def _entropy(self,x):
-        return -(x * torch.log(x + 1e-12)).sum()

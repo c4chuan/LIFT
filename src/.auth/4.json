@@ -1,0 +1,89 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.price')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "25000.00"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=84144"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.desc')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "$25000 |OR| $25,000"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=84144"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.desc')",
+                "required_contents": {
+                    "must_exclude": [
+                        "30000",
+                        "30,000"
+                    ],
+                    "must_include": null
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=84144"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": "change the price to $25000. Update the price in the description as well",
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "of the white car",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Navigate to my listing of the white car and change the price to $25000. Update the price in the description as well.",
+    "intent_template": "Navigate to my listing {{item}} and {{action}}.",
+    "intent_template_id": 2,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": true,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 4,
+    "visual_difficulty": "easy"
+}

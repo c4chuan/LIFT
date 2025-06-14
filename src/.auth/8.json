@@ -1,0 +1,75 @@
+{
+    "comments": "Closest item: http://localhost:9980/index.php?page=item&id=81838 or http://localhost:9980/index.php?page=item&id=32109",
+    "eval": {
+        "eval_types": [
+            "program_html",
+            "page_image_query"
+        ],
+        "page_image_query": [
+            {
+                "eval_fuzzy_image_match": "https://images.pexels.com/photos/6869207/pexels-photo-6869207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "eval_image_class": ".item-photos",
+                "eval_image_url": "last"
+            }
+        ],
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.price')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "270.00"
+                    ]
+                },
+                "url": "last"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": null,
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/6869207/pexels-photo-6869207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": "between $250-300",
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Help me make a post selling this item and navigate to it. Price it at $10 cheaper than the most similar item on the site between $250-300 (of the same color). If there are multiple similar items, use the most recent posting.",
+    "intent_template": "Help me make a post selling this item and navigate to it. Price it at $10 cheaper than the most similar item on the site {{range}} (of the same color). If there are multiple similar items, use the most recent posting.",
+    "intent_template_id": 4,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": true,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 8,
+    "visual_difficulty": "medium"
+}

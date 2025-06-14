@@ -1,15 +1,20 @@
 import os,json,subprocess,requests
+import argparse
+import time
+
 from PIL import Image
+from vwa.runners.utils.prepare_vwa import main as prepare_vwa_main
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from vwa.browser_env.auto_login import get_site_comb_from_filepath
 from vwa.browser_env.env_config import (
     CLASSIFIEDS,
     CLASSIFIEDS_RESET_TOKEN,
-    GITLAB,
+    # GITLAB,
     HOMEPAGE,
-    MAP,
+    # MAP,
     REDDIT,
     SHOPPING,
-    SHOPPING_ADMIN,
+    # SHOPPING_ADMIN,
     WIKIPEDIA,
 )
 ENV_URLS_SH = f"""
@@ -18,9 +23,6 @@ export CLASSIFIEDS_RESET_TOKEN="{CLASSIFIEDS_RESET_TOKEN}"
 export SHOPPING="{SHOPPING}"
 export REDDIT="{REDDIT}"
 export WIKIPEDIA="{WIKIPEDIA}"
-export SHOPPING_ADMIN="{SHOPPING_ADMIN}"
-export GITLAB="{GITLAB}"
-export MAP="{MAP}"
 export HOMEPAGE="{HOMEPAGE}"
 """.strip()
 
@@ -31,29 +33,32 @@ def task_prepare(cache_dir,task):
 
     # 把任务的config存到cache_dir下
     config_file = os.path.join(cache_dir, f"{task['task_id']}.json")
-    with open(config_file, "w", encoding="utf-8") as f:
-        json.dump(task, fp=f, indent=4,sort_keys=True)
+    # 尝试写入 JSON，并捕获可能的序列化错误
+    try:
+        with open(config_file, "w", encoding="utf-8") as f:
+            json.dump(task, f, indent=4, sort_keys=True)
+    except (TypeError, ValueError) as e:
+        # 序列化失败时，打印错误并抛出或处理
+        print(f"[ERROR] 将 task 序列化为 JSON 时出错: {e!r}")
 
+    print("Loading config from:", config_file)
     # Load task.
-    print("###Load Task###")
     with open(config_file) as f:
-        _c = json.load(f)
+        content = f.read()
+        _c = json.loads(content)
         intent = _c["intent"]
         task_id = _c["task_id"]
         image_paths = _c.get("image", None)
         images = []
 
         # automatically login
-        print("###Auto Login###")
         if _c["storage_state"]:
             cookie_file_name = os.path.basename(_c["storage_state"])
-            print(cookie_file_name)
             comb = get_site_comb_from_filepath(cookie_file_name)
-            print(comb)
-            temp_dir = "../cache"
-            print(temp_dir)
-            # subprocess to renew the cookie
-            print("run sub")
+            temp_dir = cache_dir
+            os.makedirs(cache_dir, exist_ok=True)
+            # 同理对 temp_dir
+            os.makedirs(temp_dir, exist_ok=True)
             subprocess.run(
                 [
                     "python",
@@ -66,18 +71,13 @@ def task_prepare(cache_dir,task):
                 ]
             )
             _c["storage_state"] = f"{temp_dir}/{cookie_file_name}"
-            print(_c["storage_state"])
             assert os.path.exists(_c["storage_state"])
             # update the config file
-            print("update")
             config_file = f"{temp_dir}/{os.path.basename(config_file)}"
-            with open(config_file, "w") as f:
-                json.dump(_c, f)
-            print("dump json")
 
-        # Load input images for the task, if any.
-        print("###Load Images###")
+
         if image_paths is not None:
+            # Load input images for the task, if any.
             if isinstance(image_paths, str):
                 image_paths = [image_paths]
             for image_path in image_paths:
@@ -94,7 +94,7 @@ def task_prepare(cache_dir,task):
 
                 images.append(input_image)
         else:
-            print("No input images.")
+            print("No input images found.")
 
     task_info = {
         "config_file": config_file,
@@ -104,6 +104,14 @@ def task_prepare(cache_dir,task):
     }
     print(f"Intent: {intent}")
     return task_info
+
+def parallel_prepare(cache_dir, all_tasks, max_workers=4):
+    print("Starting parallel prepare.")
+    with ThreadPoolExecutor(max_workers=max_workers) as exe:
+        # map 会按 all_tasks 的顺序返回结果
+        results = list(exe.map(lambda t: task_prepare(cache_dir, t), all_tasks))
+    print("Finish parallel prepare.")
+    return results
 
 def refresh_env_login():
     print("Refreshing login tokens.")
@@ -125,7 +133,7 @@ def refresh_env_login():
     login_script_content = f"""
     {urls}
 
-    python -m browser_env.auto_login
+    python -m vwa.browser_env.auto_login
     """.replace(" "* 4, "").strip()
 
     login_script_path = "./.auth/refresh_login.sh"
@@ -141,4 +149,38 @@ def refresh_env_login():
     process.wait()
 
     print("Done refreshing login tokens.")
+    return
+
+def reset_env(env_name: str):
+    # reset the environment
+    arg = argparse.Namespace(
+        mode="reset",
+        env=env_name,
+        force=True
+    )
+    prepare_vwa_main(arg)
+    print(f"Done resetting the environment {env_name}.")
+    return
+
+def reserve_env(env_name: str):
+    # reserve the environment
+    print(f"Reserving the environment {env_name}.")
+    arg = argparse.Namespace(
+        mode="reserve",
+        env=env_name
+    )
+    prepare_vwa_main(arg)
+    print(f"Done reserving the environment {env_name}.")
+    return
+
+
+def free_env(env_name: str):
+    # free the environment
+    print(f"Freeing the environment {env_name}.")
+    arg = argparse.Namespace(
+        mode="free",
+        env=env_name
+    )
+    prepare_vwa_main(arg)
+    print(f"Done freeing the environment {env_name}.")
     return

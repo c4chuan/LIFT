@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=47487",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "most recently posted painting in the \"Arts + crafts\" category between $80-100 that shows the sea",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Show me the most recently posted painting in the \"Arts + crafts\" category between $80-100 that shows the sea. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Show me the {{item}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 8,
+    "old_intent": "Show me the most recently posted painting in the \"Arts + crafts\" category between $80-100 that shows the sea.",
+    "old_intent_template": "Show me the {{item}}.",
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 19,
+    "visual_difficulty": "easy"
+}

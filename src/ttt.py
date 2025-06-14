@@ -5,6 +5,7 @@ from prompts.prompt_construct import PromptConstructor
 from vwa.src.envs.actions import create_id_based_action
 from playwright.sync_api import sync_playwright
 import asyncio
+import requests
 async def main():
     dataset = dataset_construct()
     config_file = task_prepare('../cache',  dataset.select([0])[0])
@@ -33,6 +34,8 @@ async def main():
     pass
 if __name__ == '__main__':
     asyncio.run(main())
+
+
     # with open('../results/response3/response.txt','r',encoding='utf-8') as f:
     #     response = f.read()
     # pt = PromptConstructor('../results')

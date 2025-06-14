@@ -1,0 +1,60 @@
+{
+    "comments": "http://localhost:9980/index.php?page=item&id=83979 does not list miles",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": {
+            "fuzzy_match": "N/A",
+            "must_include": null
+        },
+        "reference_url": "",
+        "string_note": "Miles not listed for this car.",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "black truck on this page",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": "many miles",
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "How many miles does the black truck on this page have?",
+    "intent_template": "How {{quantity}} does the {{item}} have?",
+    "intent_template_id": 9,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "easy",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=search&sCategory=10&sShowAs=gallery&iPage=5",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 24,
+    "visual_difficulty": "easy"
+}

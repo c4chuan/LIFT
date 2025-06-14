@@ -1,0 +1,63 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "http://localhost:9980/index.php?page=item&id=40404",
+                "http://localhost:9980/index.php?page=item&id=38125"
+            ]
+        },
+        "reference_url": "",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "2 most recent",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": "items in the \"Cell phones\" category within $300 to $600 that are white in color",
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Return the links of the 2 most recent items in the \"Cell phones\" category within $300 to $600 that are white in color.",
+    "intent_template": "Return the links of the {{attribute}} {{items}}.",
+    "intent_template_id": 3,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 7,
+    "visual_difficulty": "easy"
+}

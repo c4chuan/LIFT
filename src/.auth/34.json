@@ -1,0 +1,64 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "http://localhost:9980/index.php?page=item&id=14761",
+                "http://localhost:9980/index.php?page=item&id=32385",
+                "http://localhost:9980/index.php?page=item&id=47173"
+            ]
+        },
+        "reference_url": "",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": "",
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": "painting",
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": "the most recent three items that feature animals",
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Search for \"painting\" and return the links of the most recent three items that feature animals.",
+    "intent_template": "Search for \"{{phrase}}\"{{detail}} and return the links of {{target}}.",
+    "intent_template_id": 13,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 34,
+    "visual_difficulty": "hard"
+}

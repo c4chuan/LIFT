@@ -1,0 +1,62 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": "",
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "26"
+            ]
+        },
+        "reference_url": "http://localhost:9980/index.php?page=item&id=66613",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "size of the wheels in inches",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "the first blue bike on this page",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "What is the size of the wheels in inches of the first blue bike on this page?",
+    "intent_template": "What is the {{attribute}} of {{item}}?",
+    "intent_template_id": 5,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "easy",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=search&sCategory=7",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 11,
+    "visual_difficulty": "easy"
+}

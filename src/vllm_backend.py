@@ -6,7 +6,7 @@ import torch
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import AutoProcessor, AutoTokenizer
-from vllm import LLM, SamplingParams
+from vllm import LLM,SamplingParams
 from qwen_vl_utils import process_vision_info
 from contextlib import asynccontextmanager
 

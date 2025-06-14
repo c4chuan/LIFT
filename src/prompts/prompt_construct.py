@@ -9,7 +9,7 @@ class PromptConstructor:
     def __init__(self,save_dir):
         self.save_dir = save_dir
 
-    def construct_prompt(self,task, obs, info, trajectory, guidance = None, examples = None):
+    def construct_messages(self,task, obs, info, guidance = None, examples = None):
         """
         需要的信息包括：
         1. examples：是否需要few-shot
@@ -20,8 +20,7 @@ class PromptConstructor:
         messages = [] # 存储最终返回的input的messages
         messages = self._add_guidance(messages, guidance) # add guidance
         messages = self._add_examples(messages, examples) # add examples
-        messages = self._add_trajectory(messages,trajectory) # add trajectory
-        messages = self._add_query(messages,task,obs,info,trajectory) # 组装query
+        messages = self._add_query(messages,task,obs,info) # 组装query
         return messages
 
 
@@ -66,15 +65,15 @@ class PromptConstructor:
                 ]
         return messages
 
-    def _add_query(self,messages,task,obs,task_info,trajectory):
+    def _add_query(self,messages,task,obs,task_info):
         url = task_info['page'].url
         image = obs['image']
-        image_path = os.path.join(self.save_dir,str(task['task_id']))
+        image_path = os.path.join(self.save_dir,str(task.task_id))
         if not os.path.exists(image_path):
             os.makedirs(image_path)
-        cv2.imwrite(image_path+f'/{str(len(trajectory))}.png',cv2.cvtColor(image,cv2.COLOR_RGB2BGR))
-        intent = task['intent']
-        previous_action = self._get_pre_action(trajectory)
+        cv2.imwrite(image_path+f'/step_{str(task.steps)}_obs.png',cv2.cvtColor(image,cv2.COLOR_RGB2BGR))
+        intent = task.task_info['intent']
+        previous_action = self._get_pre_action(task.trajectory)
         query = TEMPLATE['LIFT'].format(url=url,intent=intent,previous_action=previous_action)
         messages.append({
             "role": "user",
@@ -83,25 +82,21 @@ class PromptConstructor:
                     "text": query
                 },
                 {
-                    "image": image_path+f'/{str(len(trajectory))}.png'
+                    "image": image_path+f'/step_{str(task.steps)}_obs.png'
                 }
             ]
         })
         return messages
 
-    def _add_trajectory(self,messages,trajectory):
-
-        for his in trajectory:
-            # TODO：增加trajectory逻辑
-            messages.append()
-
-        return messages
 
     def _get_pre_action(self,trajectory):
         if not len(trajectory):
             return 'None'
         else:
-            return trajectory[-1]['action']
+            prev_actions = ""
+            for index,summary in enumerate(trajectory):
+                prev_actions += f"step {index}:{summary}\n"
+            return prev_actions
 
     def extract_action(self,response):
         # find the first occurence of action
@@ -111,3 +106,13 @@ class PromptConstructor:
             return match.group(1).strip()
         else:
             return None
+
+    def exstract_summary(self,response):
+        """
+            提取所有被 <summary>...</summary> 包裹的内容，返回一个列表。
+            """
+        try:
+            pattern = re.compile(r'<summary>(.*?)</summary>', re.DOTALL)
+            return pattern.findall(response)[0]
+        except:
+            return ""
