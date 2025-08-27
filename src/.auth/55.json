@@ -1,0 +1,57 @@
+{
+    "comments": "Inventors are the Wright brothers",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=78765",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "http://localhost:8888/wikipedia_en_all_maxi_2022-05/I/First_flight2.jpg.webp",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": "Collectibles",
+        "comment": null,
+        "condition": "depicts the inventors of this",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find the most recently listed item in the \"Collectibles\" category that depicts the inventors of this. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find the most recently listed item in the \"{{category}}\" category that {{condition}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 22,
+    "old_intent": "Find the most recently listed item in the \"Collectibles\" category that depicts the inventors of this.",
+    "old_intent_template": "Find the most recently listed item in the \"{{category}}\" category that {{condition}}.",
+    "overall_difficulty": "easy",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 55,
+    "visual_difficulty": "easy"
+}

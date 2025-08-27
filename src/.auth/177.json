@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=15340",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": "is the same color as the objects in this image",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": "Ohio or Maryland",
+        "phrase": null,
+        "product": "cheapest listing in the \"Cars + trucks\" category",
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Navigate to the cheapest listing in the \"Cars + trucks\" category from Ohio or Maryland that is the same color as the objects in this image.",
+    "intent_template": "Navigate to the {{product}} from {{location}} that {{condition}}.",
+    "intent_template_id": 58,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 177,
+    "visual_difficulty": "easy"
+}

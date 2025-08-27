@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=7434",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "http://localhost:9980/oc-content/uploads/7434/7434.png",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": "that it was very expensive",
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "I recall seeing this exact item on the site, help me find the most recent post of it. I recall that it was very expensive. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "I recall seeing this exact item on the site, help me find the most recent post of it. I recall {{hint}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 19,
+    "old_intent": "I recall seeing this exact item on the site, help me find the most recent post of it. I recall that it was very expensive.",
+    "old_intent_template": "I recall seeing this exact item on the site, help me find the most recent post of it. I recall {{hint}}.",
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 47,
+    "visual_difficulty": "medium"
+}

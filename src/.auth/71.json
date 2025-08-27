@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=12399 |OR| http://localhost:9980/index.php?page=item&id=53168",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/359995/pexels-photo-359995.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": "is of the same item as in the image",
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": "most expensive item posted from Delaware",
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find the most expensive item posted from Delaware which is of the same item as in the image. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find the {{product}} which {{detail}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 27,
+    "old_intent": "Find the most expensive item posted from Delaware which is of the same item as in the image.",
+    "old_intent_template": "Find the {{product}} which {{detail}}.",
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 71,
+    "visual_difficulty": "medium"
+}

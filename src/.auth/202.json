@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=6247",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "cheapest",
+        "category": null,
+        "comment": null,
+        "condition": "in West Virginia",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "penguin-themed item",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Show me the cheapest penguin-themed item in West Virginia. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Show me the {{attribute}} {{item}} {{condition}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 63,
+    "old_intent": "Show me the cheapest penguin-themed item in West Virginia.",
+    "old_intent_template": "Show me the {{attribute}} {{item}} {{condition}}.",
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 202,
+    "visual_difficulty": "hard"
+}

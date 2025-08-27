@@ -1,0 +1,78 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list h3')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Would like to buy by Blake Sullivan"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=43183"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Do you accept PayPal?"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=43183"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Which palette is more value-for-money in terms of price per distinct color? Help me make a comment on that one with the title \"Would like to buy\" and text \"Do you accept PayPal?\".",
+    "intent_template": "Which palette is more value-for-money in terms of price per distinct color? Help me make a comment on that one with the title \"Would like to buy\" and text \"Do you accept PayPal?\".",
+    "intent_template_id": 65,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": true,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=item&id=65673 |AND| http://localhost:9980/index.php?page=item&id=43183",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 205,
+    "visual_difficulty": "hard"
+}

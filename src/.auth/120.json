@@ -1,0 +1,62 @@
+{
+    "comments": "http://localhost:9980/index.php?page=item&id=38276",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "canyon"
+            ]
+        },
+        "reference_url": "",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "written",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": "down tube of the bike with the purple frame on this page",
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "What is written on the down tube of the bike with the purple frame on this page?",
+    "intent_template": "What is {{attribute}} on the {{product}}?",
+    "intent_template_id": 38,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=search&sCategory=7&sShowAs=gallery&sOrder=i_price&iOrderType=desc",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 120,
+    "visual_difficulty": "medium"
+}

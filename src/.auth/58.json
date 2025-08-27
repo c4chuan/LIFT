@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=37760",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": "Furniture",
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "the most recent blue chair",
+        "items": null,
+        "listing detail": null,
+        "location": "Washington, D.C.",
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Explore the \"Furniture\" category of Washington, D.C. and find me the most recent blue chair. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Explore the \"{{category}}\" category of {{location}} and find me {{item}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 24,
+    "old_intent": "Explore the \"Furniture\" category of Washington, D.C. and find me the most recent blue chair.",
+    "old_intent_template": "Explore the \"{{category}}\" category of {{location}} and find me {{item}}.",
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 58,
+    "visual_difficulty": "easy"
+}

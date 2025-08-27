@@ -25,7 +25,7 @@ class SampleResponse(BaseModel):
 # 全局占位：将模型加载移至 lifespan 管理
 # ------------------------
 MODEL_PATH = os.getenv(
-    "MODEL_PATH", "/data/wangzhenchuan/.cache/modelscope/hub/models/Qwen/Qwen2.5-VL-7B-Instruct"
+    "MODEL_PATH", "/data/pretrained_models/Qwen2.5-VL-7B-Instruct"
 )
 processor = None
 tokenizer = None
@@ -48,9 +48,9 @@ class ResponseSampler:
 
         sampling_params = SamplingParams(
             n=n,
-            temperature=0.7,
-            top_p=0.9,
-            repetition_penalty=1.1,
+            temperature=1.0,
+            top_p=1,
+            # repetition_penalty=1.1,
             max_tokens=2048,
             stop_token_ids=[],
         )
@@ -85,7 +85,10 @@ async def lifespan(app: FastAPI):
     tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, use_fast=False)
     model = LLM(model=MODEL_PATH,
                 # enforce_eager=True,
-                limit_mm_per_prompt={"image": 2, "video": 0})
+                limit_mm_per_prompt={"image": 2, "video": 0},
+                dtype="bfloat16",
+                # tensor_parallel_size=4
+                )
     sampler = ResponseSampler(model, tokenizer, processor)
     print("Model loaded ✅")
     yield

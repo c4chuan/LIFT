@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=65205",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "latest",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": "with a pattern matching the top left animal in the first image of the listing",
+        "detail": null,
+        "hint": null,
+        "item": "listing of a pillow",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Show me the latest listing of a pillow from the classifieds site with a pattern matching the top left animal in the first image of the listing on OneStopMarket. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Show me the {{attribute}} {{item}} from the classifieds site {{description}} on OneStopMarket. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 62,
+    "old_intent": "Show me the latest listing of a pillow from the classifieds site with a pattern matching the top left animal in the first image of the listing on OneStopMarket.",
+    "old_intent_template": "Show me the {{attribute}} {{item}} from the classifieds site {{description}} on OneStopMarket.",
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:7770/24-pcs-lot-wild-animal-cupcake-wrappers-birthday-cake-party-decoration-supplies-lion-monkey-zebra-elephant.html |AND| http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 200,
+    "visual_difficulty": "hard"
+}

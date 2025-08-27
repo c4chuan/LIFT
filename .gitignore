@@ -8,3 +8,10 @@ vwa
 vllm
 transformers
 Qwen
+merged_models
+visualwebarena
+vwa
+vwa_eval
+src/image_cache
+src/swanlog
+src/wandb

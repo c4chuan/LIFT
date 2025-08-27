@@ -1,0 +1,60 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": "N/A",
+        "reference_answers": {
+            "fuzzy_match": "N/A",
+            "must_include": null
+        },
+        "reference_url": "",
+        "string_note": "There are no yellow items on the page.",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/2872755/pexels-photo-2872755.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": "includes a car the same color",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "listing",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Navigate to the listing on this page whose image includes a car the same color as the item in the image provided.",
+    "intent_template": "Navigate to the {{item}} on this page whose image {{condition}} as the item in the image provided.",
+    "intent_template_id": 55,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "easy",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=search&sCategory=10&iPage=4y",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 164,
+    "visual_difficulty": "easy"
+}

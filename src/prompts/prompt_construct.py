@@ -1,9 +1,15 @@
 import os.path
-
+from PIL import Image
 import cv2
 import re
-
+from typing import Any
+from browser_env.utils import StateInfo, pil_to_b64, pil_to_vertex
 from src.prompts.prompts import GUIDANCE,EXAMPLES,TEMPLATE
+from browser_env.env_config import URL_MAPPINGS
+from src.envs.actions import Action
+from src.llms.utils import _add_modality_key_for_sglang_messages
+
+
 
 class PromptConstructor:
     def __init__(self,save_dir):
@@ -95,7 +101,13 @@ class PromptConstructor:
         else:
             prev_actions = ""
             for index,summary in enumerate(trajectory):
-                prev_actions += f"step {index}:{summary}\n"
+                # 去掉summary中的
+                summary = summary.replace('<|vision_start|>','')
+                summary = summary.replace('<|vision_end|>','')
+                summary = summary.replace('<|image_pad|>','')
+                summary = summary.replace('<image>', '')
+                print(summary)
+                prev_actions += f"summary of step {index}:{summary}\n"
             return prev_actions
 
     def extract_action(self,response):

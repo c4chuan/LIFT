@@ -1,0 +1,57 @@
+{
+    "comments": "2nd page of the Arts + crafts section",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=60133",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/1330219/pexels-photo-1330219.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": "Arts + crafts",
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "something that looks close to this",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": "painting"
+    },
+    "intent": "Find me the most recent painting in the \"Arts + crafts\" category of something that looks close to this. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find me the most recent {{type}} in the \"{{category}}\" category of {{item}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 20,
+    "old_intent": "Find me the most recent painting in the \"Arts + crafts\" category of something that looks close to this.",
+    "old_intent_template": "Find me the most recent {{type}} in the \"{{category}}\" category of {{item}}.",
+    "overall_difficulty": "easy",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 52,
+    "visual_difficulty": "medium"
+}

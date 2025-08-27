@@ -83,12 +83,16 @@ def task_prepare(cache_dir,task):
             for image_path in image_paths:
                 # Load image either from the web or from a local path.
                 if image_path.startswith("http"):
-                    req = requests.get(
-                        image_path,
-                        headers={"User-Agent": "Mozilla/5.0"},
-                        stream=True
-                    )
-                    input_image = Image.open(req.raw)
+                    try:
+                        req = requests.get(
+                            image_path,
+                            headers={"User-Agent": "Mozilla/5.0"},
+                            stream=True
+                        )
+                        input_image = Image.open(req.raw)
+                    except Exception:
+                        print("Error loading image from URL:", image_path)
+                        continue
                 else:
                     input_image = Image.open(image_path)
 

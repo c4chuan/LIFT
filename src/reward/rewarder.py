@@ -3,12 +3,15 @@ import os.path
 import torch,re,cv2
 import torch.nn.functional as F
 import numpy as np
+import deepspeed
 from ray.experimental.array.remote import zeros_like
-
+import wandb
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor,AutoTokenizer,AutoModelForCausalLM
 from qwen_vl_utils import process_vision_info
 from src.utils.visualize_tools import show_mask_on_image
+from src.reward.reward_tools import action_format_reward,summary_format_reward
 
+BASE_URL = "http://192.168.1.6:7333"
 
 class Rewarder:
     def __init__(self, model_path = "/data/wangzhenchuan/.cache/modelscope/hub/models/Qwen/Qwen2___5-VL-7B-Instruct"):
@@ -20,10 +23,11 @@ class Rewarder:
     def _load_vlm_model(self, model_path):
         model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_path,
-            torch_dtype=torch.float32,
+            torch_dtype=torch.float16,
             attn_implementation="eager",
             device_map="auto",
-            trust_remote_code=True
+            trust_remote_code=True,
+            # tp_plan="auto"
         )
         processor = AutoProcessor.from_pretrained(model_path)
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
@@ -34,9 +38,10 @@ class Rewarder:
 
         return tokenizer, model, processor, context_len
 
-    def batch_reward(self,responses, image_paths, visualize = False, visual_save = None):
-        """基于reward函数的相同逻辑，并行处理多个response"""
 
+    def _compute_format_reward(self,response):
+        """计算格式奖励"""
+        return action_format_reward(response),summary_format_reward(response)
 
     def reward(self,response,image_path,visualize = False,visual_save = None):
         """
@@ -48,8 +53,14 @@ class Rewarder:
         if torch.cuda.is_available() and device.type == 'cuda':
             torch.cuda.reset_peak_memory_stats(device)
 
+        a_format_reward,s_format_reward = self._compute_format_reward(response)
+
         # 1. 从response中提取标签,组装新的input_text,并提取出观察序列
         processed_input,obs_seq = self._get_processed_input(response)
+
+        if len(obs_seq)== 0:
+            # 如果没有观察序列，可以直接返回了
+            return 0,0,a_format_reward,s_format_reward
 
         # 2. 组装messages
         messages = self._make_messages(processed_input,image_path)
@@ -66,7 +77,7 @@ class Rewarder:
             peak_mib = peak_bytes / (1024 ** 2)
             print(f"[Rewarder] Peak GPU memory during reward(): {peak_mib:.1f} MiB")
 
-        return shift_reward,zoom_reward
+        return shift_reward,zoom_reward,a_format_reward,s_format_reward
 
     def _get_processed_input(self,response):
         """提出标签内的内容"""
@@ -74,7 +85,10 @@ class Rewarder:
         pattern = re.compile(r"<(?P<tag>zoom in|shift)>(?P<content>.*?)</(?P=tag)>", re.DOTALL)
 
         # finditer 返回 Match 对象的迭代器
-        results = [(m.group("tag"), m.group("content")) for m in pattern.finditer(response)]
+        results = []
+        for m in pattern.finditer(response):
+            if len(m.group("content"))>5:
+                results.append((m.group("tag"), m.group("content")))
 
         # 组装input
         processed_input = ''.join([f"{content}" for tag, content in results])
@@ -119,12 +133,17 @@ class Rewarder:
         inputs = inputs.to(self.model.device)
         input_ids = inputs["input_ids"]
         with torch.inference_mode():
-            outputs = self.model.generate(
+            # outputs = self.model.generate(
+            #     **inputs,
+            #     max_new_tokens=1,
+            #     do_sample=False,
+            #     use_cache=False,
+            #     return_dict_in_generate=True,
+            #     output_attentions=True
+            # )
+            outputs = self.model(
                 **inputs,
-                max_new_tokens=1,
-                do_sample=False,
-                use_cache=False,
-                return_dict_in_generate=True,
+                return_dict = True,
                 output_attentions=True
             )
 
@@ -179,9 +198,10 @@ class Rewarder:
                     matched_indices.append(idx)
             if len(matched_indices) == 0:
                 raise ValueError(f"无法找到任何 token 完全落在子串范围内：{content}")
-            st = matched_indices[0]
-            ed = matched_indices[-1]+1
-            obs_token_indices.append((st,ed,full_input_ids[st:ed]))
+            else:
+                st = matched_indices[0]
+                ed = matched_indices[-1]+1
+                obs_token_indices.append((st,ed,full_input_ids[st:ed]))
         return obs_token_indices,full_input_ids
 
     def _get_attn_seq(self,obs_attn,obs_range_seq,outputs):
@@ -284,8 +304,8 @@ class Rewarder:
         return shift_rewards, zoom_rewards
 
     def _log_smooth(self,shift_rewards,zoom_rewards):
-        """log平缓"""
-        return np.log2(shift_rewards), np.log2(zoom_rewards)
+        """log平缓,加一是为了把值域放到0~正无穷"""
+        return np.log2(shift_rewards+1.0), np.log2(zoom_rewards+1.0)
 
     def _compute_shift_reward(self,obs_attn,avg_history_attn):
         """计算与历史的补集的包含度"""
@@ -343,3 +363,243 @@ class Rewarder:
         union = x.sum()
 
         return intersect / union
+
+class ChunkRewarder(Rewarder):
+    def __init__(self, chunk_size, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.chunk_size = chunk_size
+
+    def reward(self,response,image_path,visualize = False,visual_save = None):
+        """
+        response: 模型输出的text tokens
+        image: 对应的环境的截图
+        """
+        # reset peak-memory stats on this device
+        device = self.model.device
+        if torch.cuda.is_available() and device.type == 'cuda':
+            torch.cuda.reset_peak_memory_stats(device)
+
+        a_format_reward,s_format_reward = self._compute_format_reward(response)
+
+        # 1. 从response中提取标签,组装新的input_text,并提取出观察序列
+        processed_input,obs_seq = self._get_processed_input(response)
+
+        if len(obs_seq)== 0:
+            # 如果没有观察序列，可以直接返回了
+            return 0,0,a_format_reward,s_format_reward
+
+        # 4. 计算reward
+        shift_reward,zoom_reward = self._compute_reward(obs_seq,processed_input,image_path,visualize,visual_save)
+        # query peak GPU memory
+        if torch.cuda.is_available() and device.type == 'cuda':
+            peak_bytes = torch.cuda.max_memory_allocated(device)
+            peak_mib = peak_bytes / (1024 ** 2)
+            print(f"[Rewarder] Peak GPU memory during reward(): {peak_mib:.1f} MiB")
+
+        return shift_reward,zoom_reward,a_format_reward,s_format_reward
+
+    def _aggregate_attentions(self,attn):
+        """attn[0][0]是一个长度为层数的列表，每个元素是size为[1,28,N,N]的tensor
+        将每层attention先按注意力头平均再按层平均，最后得到NxN的矩阵"""
+        # 将每层attention堆叠成[L, heads, N, N]
+        attn_tensor = torch.zeros_like(attn[0][0].squeeze(0))
+        for att in attn:
+            attn_tensor+= att.squeeze(0)
+        # 对head维度求平均 -> [L, N, N]
+        head_avg = attn_tensor/len(attn)
+        # 对layer维度求平均 -> [N, N]
+        layer_avg = head_avg.mean(dim=0)
+        return layer_avg
+
+    def _compute_reward(self,obs_seq,processed_input,image_path,visualize,visual_save):
+        """根据观察序列和这些text tokens关于image tokens的attention计算reward"""
+
+        # 首先将obs 用batch的形式得到token ids
+        obs_tag_seq = [tag for tag,_ in obs_seq]
+        obs_range_seq,full_input_ids = self._get_obs_indices(processed_input,obs_seq)
+        messages = self._make_messages(processed_input, image_path)
+        text = self.processor.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+        image_inputs, video_inputs = process_vision_info(messages)
+        inputs = self.processor(
+            text=[text],
+            images=image_inputs,
+            videos=video_inputs,
+            padding=True,
+            return_tensors="pt",
+        )
+        input_ids = inputs["input_ids"]
+        # 输入的整个input的组织形式应该如下所示：
+        # <|im_start|>system
+        # You are a helpful assistant.<|im_end|>
+        # <|im_start|>user
+        # <|vision_start|><|image_pad|><|vision_end|>
+        # ......
+        # <|im_end|>
+        # <|im_start|>assistant
+
+        vision_start = len(self.tokenizer(text.split("<|image_pad|>")[0], return_tensors='pt')["input_ids"][0])
+        vision_end = vision_start+int(torch.prod(inputs["image_grid_thw"]) / (2 ** 2))
+
+        outputs = self._chunk_forward(inputs, vision_start, vision_end,full_input_ids,self.chunk_size)
+
+        obs_attn = outputs["attention"]
+        obs_attn_seq = self._get_attn_seq(obs_attn,obs_range_seq,outputs)
+
+        # 初始化history为均匀分布
+        N = obs_attn_seq[0].size(0)
+        history = torch.zeros_like(obs_attn_seq[0])
+
+        shift_rewards = 0 # 初始化shift_reward
+        zoom_rewards = 0 # 初始化zoom_reward
+
+        for index,tag in enumerate(obs_tag_seq):
+
+            cur_attn = obs_attn_seq[index]
+            # 首先，obs_seq每一个元素都是一段观察的文本+对应的tag(<zoom in>还是<shift>)
+            if tag == 'shift':
+                # 计算该段obs与history的KL散度
+                if index == 0:
+                    avg_history = torch.ones_like(obs_attn_seq[0])/N
+                else:
+                    avg_history = history/index
+                comp_avg_history = avg_history.max() - avg_history
+                shift_rewards += self._containing_degree(cur_attn,comp_avg_history)
+
+            elif tag == 'zoom in':
+                # 计算该段obs的attention与上一段obs的attention的包含度，即余弦相似度
+                if index == 0:
+                    avg_history = torch.ones_like(obs_attn_seq[0])/N
+                    zoom_reward = self._containing_degree(cur_attn,avg_history)
+                else:
+                    prev_attn = obs_attn_seq[index-1]
+                    zoom_reward = self._containing_degree(cur_attn,prev_attn)
+
+                zoom_rewards += zoom_reward
+
+            # 计算后，将该段obs的attention加入历史
+            history += obs_attn_seq[index]
+
+            # 是否需要可视化
+            if visualize:
+                heated_image = self.visualize(outputs,obs_attn_seq[index])
+                if visual_save:
+                    if not os.path.exists(visual_save):
+                        os.mkdir(visual_save)
+                    cv2.imwrite(f'{visual_save}/{tag}_{index}.png',heated_image)
+
+
+        # log平缓
+        shift_rewards,zoom_rewards = self._log_smooth(shift_rewards,zoom_rewards)
+        return shift_rewards, zoom_rewards
+
+    def split_tokens(self,all_tokens, max_len, vision_start,vision_end,full_input_ids):
+        """
+        分割文本 tokens
+        """
+
+        return [all_tokens[vision_end+i:vision_end+i+max_len] for i in range(0, len(full_input_ids), max_len)]
+
+    def _chunk_forward(self, inputs,vision_start,vision_end,full_input_ids, max_text_len):
+
+        # 获取文本 tokens
+        all_tokens = inputs["input_ids"][0]
+
+        # 切分文本 tokens
+        text_chunks = self.split_tokens(all_tokens, max_text_len, vision_start, vision_end,full_input_ids)
+
+        results = []
+        for chunk in text_chunks:
+            # 每次输入：图像 tokens + 当前文本片段 tokens
+            chunk_input_ids = torch.cat([inputs["input_ids"][:, :vision_end], torch.tensor(chunk).unsqueeze(0)],
+                                        dim=1)
+
+            inputs_chunk = {
+                "input_ids": chunk_input_ids,
+                "pixel_values": inputs["pixel_values"],  # 保持图像输入不变
+                "image_grid_thw": inputs['image_grid_thw'],
+            }
+
+            inputs_chunk = {k: v.to(self.model.device) for k, v in inputs_chunk.items()}
+
+            with torch.inference_mode():
+                outputs = self.model(
+                    **inputs_chunk,
+                    return_dict=True,
+                    output_attentions=True
+                )
+
+            # 保存每个 chunk 的 attention
+            results.append(outputs['attentions'])
+
+        # 将所有 chunk 的 attention 合并
+        # 最终的结果元组
+        attn_result = []
+
+        for idx in range(len(results[0])):
+            # 收集所有元组中第 idx 个位置的 tensor
+            tensors = [
+                t[:, :, vision_end:, vision_start:vision_end]  # 切取最后一维
+                for tup in results
+                for j, t in enumerate(tup) if j == idx
+            ]
+            # 在 w 维度 (dim=2) 拼接
+            merged = torch.cat(tensors, dim=2)
+            attn_result.append(merged)
+
+        del results
+        # 转成元组
+        attn_result = tuple(attn_result)
+        all_attention = self._aggregate_attentions(attn_result)
+        del attn_result
+        torch.cuda.empty_cache()
+        all_attention = all_attention[1:len(full_input_ids)+1,:]
+
+        return {
+            "attention": all_attention,  # 返回整个的 attention 矩阵
+            "num_patches": int(torch.prod(inputs['image_grid_thw'],) / (2 ** 2)),
+            "image_grid": inputs['image_grid_thw'],
+        }
+
+
+if __name__ == "__main__":
+    rewarder = ChunkRewarder(chunk_size=7200,model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
+    # rewarder = Rewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
+    e_text = f"""Let's observe step by step. First, I will zoom in to see more of the video gamer commitments.
+<zoom in>
+This screenshot has four columns. It is in the Us classify section. The listings are different
+
+### Column A:
+- **Label:** 'Your search' and 'Please search for'
+- Boxes: It shows 7 items.
+
+### Column B:
+- **Label:** 'City'
+- Boxes: shows checkboxes and dropdowns
+
+### Column C:
+- **Label:** 'Show only listings with pictures'
+- Boxes: it shows a box with a picture and text boxes for pictures and price
+
+### Column D:
+- **Label:** 'Price Min.'
+  - Text: includes different prices
+- Box: it includes price range checkboxes
+
+</zoom in>
+According to the observation above, the listings shown here are related to Video Gaming, and not Motorcycles. Next, I need to shift focus to the elements that can navigate or adjust the clasification which I suspect can allow switching into Matching the right classification.
+
+<shift>{"pad|"*8000}</shift>
+<summary>
+Observations so far:
+- The screenshot is in the 'Video gaming' section.
+- The goal is to find motorcycle listings according to the objective.
+- The initiation action was clicking 'Video gaming', so we need a next step to adjust the clasification. Since there are steering options, I'll check elements that might navigate to another categorization.
+
+Action: Click the 'Video gaming' option in column C to change from the current topic.
+```
+click [14]
+```
+</summary>"""
+    print(rewarder.reward(e_text,image_path="/data/wangzhenchuan/Projects/LIFT/src/image_cache/example_example.png"))

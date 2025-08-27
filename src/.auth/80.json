@@ -1,0 +1,63 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": "",
+        "reference_answers": {
+            "fuzzy_match": null,
+            "must_include": [
+                "Yuna",
+                "Siti"
+            ]
+        },
+        "reference_url": "http://localhost:9980/index.php?page=item&id=33101 and http://localhost:9980/index.php?page=item&id=45618",
+        "string_note": "",
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": "first names of the listers who posted the items on the page",
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": "do not include a book in its image",
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Tell me the first names of the listers who posted the items on the page that do not include a book in its image?",
+    "intent_template": "Tell me the {{detail}} that {{product}}?",
+    "intent_template_id": 31,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=search&sCategory=9&iPage=4&sOrder=i_price&iOrderType=asc",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 80,
+    "visual_difficulty": "medium"
+}

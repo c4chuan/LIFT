@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=33317",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/1750754/pexels-photo-1750754.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": "has a listing image that references a sports team for the city",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": null,
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": "the most expensive Collectibles listing",
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find me the most expensive Collectibles listing that has a listing image that references a sports team for the city in the image. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find me {{product}} that {{condition}} in the image. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 30,
+    "old_intent": "Find me the most expensive Collectibles listing that has a listing image that references a sports team for the city in the image.",
+    "old_intent_template": "Find me {{product}} that {{condition}} in the image.",
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 185,
+    "visual_difficulty": "hard"
+}

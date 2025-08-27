@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=18534",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": "https://images.pexels.com/photos/14656911/pexels-photo-14656911.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": "which is of a similar color as the person's outfit",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "bike",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find the cheapest bike which is of a similar color as the person's outfit. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find the cheapest {{item}} {{condition}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 32,
+    "old_intent": "Find the cheapest bike which is of a similar color as the person's outfit.",
+    "old_intent_template": "Find the cheapest {{item}} {{condition}}.",
+    "overall_difficulty": "medium",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 117,
+    "visual_difficulty": "medium"
+}

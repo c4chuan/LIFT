@@ -1,0 +1,79 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list h3')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Great item by Blake Sullivan"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=15810"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Would recommend!",
+                        "5 of 5"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=15810"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "a touch screen",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "most recently listed coffee maker",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": "5 star",
+        "target": null,
+        "text": "Would recommend!",
+        "title": "Great item",
+        "type": null
+    },
+    "intent": "Find the most recently listed coffee maker with a touch screen. Add a 5 star rating with title \"Great item\" and text \"Would recommend!\".",
+    "intent_template": "Find the {{item}} with {{attribute}}. Add a {{rating}} rating with title \"{{title}}\" and text \"{{text}}\".",
+    "intent_template_id": 35,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 180,
+    "visual_difficulty": "hard"
+}

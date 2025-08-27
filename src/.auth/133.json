@@ -1,0 +1,79 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list h3')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Nice collection by Blake Sullivan"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=67441"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Any other games?",
+                        "4 of 5"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=67441"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "more than 9 games in the listing image",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "oldest listing of Xbox One games in the \"Video gaming\" category",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": "4 star",
+        "target": null,
+        "text": "Any other games?",
+        "title": "Nice collection",
+        "type": null
+    },
+    "intent": "Find the oldest listing of Xbox One games in the \"Video gaming\" category with more than 9 games in the listing image. Add a 4 star rating with title \"Nice collection\" and text \"Any other games?\".",
+    "intent_template": "Find the {{item}} with {{attribute}}. Add a {{rating}} rating with title \"{{title}}\" and text \"{{text}}\".",
+    "intent_template_id": 35,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 133,
+    "visual_difficulty": "medium"
+}

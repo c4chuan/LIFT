@@ -1,0 +1,78 @@
+{
+    "comments": "http://localhost:9980/index.php?page=item&id=43992",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list h3')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Urgent by Blake Sullivan"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=43992"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Need this for my bowling alley."
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=43992"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": "http://localhost:9980/oc-content/uploads/43992/43992.png",
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": "Need this for my bowling alley.",
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "expensive item in the Video Gaming category",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": "Urgent",
+        "type": null
+    },
+    "intent": "I recall seeing this exact expensive item in the Video Gaming category on the site, add a comment on its listing with the title \"Urgent\" and text \"Need this for my bowling alley.\".",
+    "intent_template": "I recall seeing this exact {{item}} on the site, add a comment on its listing with the title \"{{title}}\" and text \"{{comment}}\".",
+    "intent_template_id": 52,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": true,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 145,
+    "visual_difficulty": "hard"
+}

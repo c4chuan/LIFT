@@ -1,0 +1,79 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "program_html"
+        ],
+        "page_image_query": null,
+        "program_html": [
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list h3')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Awesome boat by Blake Sullivan"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=40932"
+            },
+            {
+                "locator": "func:get_query_text(__page__, '.comments_list')",
+                "required_contents": {
+                    "must_exclude": null,
+                    "must_include": [
+                        "Mine is similar!",
+                        "5 of 5"
+                    ]
+                },
+                "url": "http://localhost:9980/index.php?page=item&id=40932"
+            }
+        ],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "",
+        "string_note": null,
+        "url_note": null
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": "a listing image showing it on water",
+        "category": null,
+        "comment": null,
+        "condition": null,
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "most expensive boat",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": "5 star",
+        "target": null,
+        "text": "Mine is similar!",
+        "title": "Awesome boat",
+        "type": null
+    },
+    "intent": "Find the most expensive boat with a listing image showing it on water. Add a 5 star rating with title \"Awesome boat\" and text \"Mine is similar!\".",
+    "intent_template": "Find the {{item}} with {{attribute}}. Add a {{rating}} rating with title \"{{title}}\" and text \"{{text}}\".",
+    "intent_template_id": 35,
+    "old_intent": null,
+    "old_intent_template": null,
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "hard",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 95,
+    "visual_difficulty": "easy"
+}

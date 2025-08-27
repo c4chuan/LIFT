@@ -1,0 +1,57 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "url_match"
+        ],
+        "page_image_query": null,
+        "program_html": [],
+        "reference_answer_raw_annotation": null,
+        "reference_answers": null,
+        "reference_url": "http://localhost:9980/index.php?page=item&id=23225",
+        "string_note": null,
+        "url_note": "EXACT"
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "action": null,
+        "attribute": null,
+        "category": null,
+        "comment": null,
+        "condition": "with a red velvet lined case",
+        "criteria": null,
+        "description": null,
+        "detail": null,
+        "hint": null,
+        "item": "guitar",
+        "items": null,
+        "listing detail": null,
+        "location": null,
+        "phrase": null,
+        "product": null,
+        "quantity": null,
+        "range": null,
+        "rating": null,
+        "target": null,
+        "text": null,
+        "title": null,
+        "type": null
+    },
+    "intent": "Find the cheapest guitar with a red velvet lined case. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template": "Find the cheapest {{item}} {{condition}}. Finish the task by navigating to that item's page and returning me the url link(s).",
+    "intent_template_id": 32,
+    "old_intent": "Find the cheapest guitar with a red velvet lined case.",
+    "old_intent_template": "Find the cheapest {{item}} {{condition}}.",
+    "overall_difficulty": "hard",
+    "reasoning_difficulty": "medium",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 105,
+    "visual_difficulty": "hard"
+}
