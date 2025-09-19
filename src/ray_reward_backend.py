@@ -106,9 +106,9 @@ def get_rewards(batch: BatchRequest):
     # with open("./resp.txt", "w", encoding="utf-8") as f:
     #     f.write(str(responses))
     # print(responses)
-    # request_response = requests.post(url=f"{BASE_URL}/get_valid_action_rewards", json={"responses":responses}).json()
-    # valid_action_rewards = request_response['rewards']
-    valid_action_rewards = [0.0 for _ in responses]
+    request_response = requests.post(url=f"{BASE_URL}/get_valid_action_rewards", json={"responses":responses}).json()
+    valid_action_rewards = request_response['rewards']
+    # valid_action_rewards = [0.0 for _ in responses]
 
     new_image_paths = parallel_scp(remote_paths=remote_paths)
     global actors
@@ -125,11 +125,6 @@ def get_rewards(batch: BatchRequest):
 
     # 将 raw_results 和 valid_action_rewards 合并，构造 Pydantic 返回模型
     results = []
-    avg_sr = 0
-    avg_zr = 0
-    avg_af = 0
-    avg_sf = 0
-    avg_val = 0
     for idx, (sr, zr, af, sf) in enumerate(raw_results):
         # 如果 valid_action_rewards 长度不够，则默认 0.0
         val = valid_action_rewards[idx] if idx < len(valid_action_rewards) else 0.0
@@ -142,27 +137,6 @@ def get_rewards(batch: BatchRequest):
                 valid_action_reward=val
             )
         )
-        avg_val += val
-        avg_sf += sf
-        avg_zr += zr
-        avg_af += af
-        avg_sr += sr
-
-    avg_val /= len(raw_results)
-    avg_sf /= len(raw_results)
-    avg_zr /= len(raw_results)
-    avg_af /= len(raw_results)
-    avg_sr /= len(raw_results)
-    # wandb 记录所有类型的奖励
-    swanlab.log({
-        "steps": settings['initial_steps'],
-        "shift_reward": avg_sr,
-        "zoom_reward": avg_zr,
-        "a_format_reward": avg_af,
-        "s_format_reward": avg_sf,
-        "valid_action_reward": avg_val
-    })
-    settings['initial_steps'] += 1
     return BatchResponse(results=results)
 
 if __name__ == "__main__":

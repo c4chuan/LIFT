@@ -175,6 +175,10 @@ class EnvironmentManager:
                 task.obs_info = info
             else:
                 obs,action_reward,_,_,info = result # None,0.0,
+                if obs['image'] is None:
+                    obs = task.state_trajectory[-1]['observation']
+                    action_reward = 0.0
+                    info = task.state_trajectory[-1]['info']
                 state_info = {"observation": obs, "info": info, "url": task.env.page.url}
                 task.state_trajectory.append(action)
                 task.state_trajectory.append(state_info)
@@ -185,10 +189,7 @@ class EnvironmentManager:
                     prompt_constructor=self.pct
                 )
                 task.action_history.append(action_str)
-                if obs['image'] is None:
-                    obs = task.state_trajectory[-1]['observation']
-                    action_reward = 0.0
-                    info = task.state_trajectory[-1]['info']
+
 
                 # message = self.pct.construct_messages(task,obs,info,guidance='LIFT',examples='LIFT')
                 message = self.pct.construct(
@@ -217,12 +218,16 @@ class EnvironmentManager:
             f"现在处于生产状态的任务有{len(self.busy_tasks)}个，task_id分别是{str([t.task_id for t in self.busy_tasks])}")
         print(
             f"现在处于消息队列中的任务有{len(self.message_queue)}个，task_id分别是{str([t.task_id for t, _ in self.message_queue])}")
+
         for task in processed_tasks:
             if task in self.prev_tasks:
                 self.prev_tasks.remove(task) # 生产完毕，可以清除
 
     def get_valid_action_rewards(self,responses):
         """给每一个action计算是否可以进行迭代"""
+        print(len(responses))
+        print(
+            f"现在处于prev_tasks队列中的任务有{len(self.prev_tasks)}个，task_id分别是{str([t.task_id for t, _ in self.message_queue])}")
         valid_action_rewards = []
         batch_size = int(len(responses) / len(self.prev_tasks))
         responses_list = [responses[i:i + batch_size] for i in range(0, len(responses), batch_size)]

@@ -329,29 +329,29 @@ PREVIOUS ACTION: None""",
 	"LIFT":
 		[
 			{
-				"query": """URL: http://127.0.0.1:9980/index.php?page=search&sCategory=10
+				"query": """URL: http://classifieds.com/index.php?page=search&sCategory=17
 OBJECTIVE: Explore the "Furniture" category of Washington, D.C. and find me the most recent blue chair.
 PREVIOUS ACTION: click [40] where [40] is [A] element with content [Cars+trucks]
 """,
 				"answer":"""Let's observe step-by-step. First, I will zoom in to observe the whole page.
 <zoom in>
 This page can be divided into following sections:
-**Header Section**:
+Header Section:
 - Contains "OsClass" logo and navigation links for "My account," "Logout," and "Publish Ad."
    
-**Navigation Bar**:
+Navigation Bar:
 - Includes options like "Classifieds" > Furniture.
   
-**Search Filters Area**: 
+Search Filters Area: 
 - Allows users to input search terms, select cities, show only listings with pictures, set price ranges using sliders or text fields.
 
-**Subscribe Box**:
+Subscribe Box:
 - Option allowing visitors to subscribe via email notifications about new furniture items matching their criteria; includes an orange box labeled “Subscribe now!”
 
-**Refine Category Options**:
+Refine Category Options:
 - Links allow narrowing down searches further: all categories and 'Furniture'.
 
-**Main Content Area – Listings Displayed** :
+Main Content Area – Listings Displayed :
 - Lists available furniture products including images, titles, prices, locations alongwith brief descriptions below.
 </zoom in>
 According to the observation above, this page already displays products of "Furniture" category and the products are already \
@@ -360,48 +360,44 @@ to see if there is any blue chair.
 <zoom in>
 The "Main Content Area" section of this page displays three furniture items for sale:
 
-### Century Furniture English Roll Arm Sofa
-- **Title:** Century Furniture English Roll Arm Sofa  
-- **Price:** $605.00 ($23 less than original)  
-- **Location:** Arlington, Virginia / Added: November 16th, 2023  
+Century Furniture English Roll Arm Sofa
+- Title: Century Furniture English Roll Arm Sofa  
+- Price: $605.00 ($23 less than original)  
+- Location: Arlington, Virginia / Added: November 16th, 2023  
 
-**Description:**
-```
+Description:
+
 SAVE UP TO 90%! PRICES UPDATED DAILY!
 Century Furniture English Roll Arm sofa.
 Original Price was $5000 now only at $605.00
 Brand: Century Furniture
-``` 
 
----
 
-### Highland House Tufted Back Accent Chair
-- **Title:** Highland House Furniture Tufted Back Accent Chair 
-- **Price:** $220.00 ($78 off from Original)   
-- **Location:** Dale City, Virginia / Added: November 16th, 2023
+Highland House Tufted Back Accent Chair
+- Title: Highland House Furniture Tufted Back Accent Chair 
+- Price: $220.00 ($78 off from Original)   
+- Location: Dale City, Virginia / Added: November 16th, 2023
 
-**Description:**
-```
+Description:
+
 SAVE UP TO 90% !PRICES UPDATED DAILY!
 Highland house furniture tufted back accent chair.
 original price :$4500 now it's just:$220.00
 brand high land house furniture
-``` 
 
----
 
-### NEW Zinus Green Tea QUEEN Memory Foam Mattress
-- **Title:** New Zinus 12 Inch Green Tea Queen Memory Foam Mattress    
-- **Price:** $199.00 ($401 discount compared to retail value)
+NEW Zinus Green Tea QUEEN Memory Foam Mattress
+- Title: New Zinus 12 Inch Green Tea Queen Memory Foam Mattress    
+- Price: $199.00 ($401 discount compared to retail value)
 
-- **Location:** Borough of East Washington, Pennsylvania / Added: November 16th, 2023   
+- Location: Borough of East Washington, Pennsylvania / Added: November 16th, 2023   
 
-**Description:**
-```
+Description:
+
 Zinus 12 Inch green tea queen memory foam mattress certipur-us certified bed-in-a-box pressure relieving queen.
 This bed retails for $600 get it for one-third its price of $199 !
 Also have bedframes available at steep discounts if you want to save...
-```
+
 </zoom in>
 According to the observation above, only Highland House Tufted Back Accent Chair is a chair in Washington, D.C., I need to zoom in its thumbnail image \
 to see if it's blue.
@@ -412,22 +408,22 @@ light beige/cream color with deep button tufting—not blue.
 According to the observation above, none of the products in this page is the most recent blue chair in Washington, D.C. \
 So I need to shift to Search Filters Area to narrow down the products displayed to products in Washington, D.C.
 <shift>
-We move our focus to the **Search Filters Area** on the left:
+We move our focus to the Search Filters Area on the left:
 The Search Filters Area is located on the left side of the webpage and contains several options to refine search results:
 
-1. **Your search**: A text box where users can enter specific keywords or phrases related to their furniture needs.
-2. **City**: Another input field for specifying the city in which they want to find listings, allowing searches within particular geographic areas.
-3. **Show only listings with pictures**: An option that filters out ads without images if selected by checking this checkbox (not checked here).
-4. **Price Min./Max.:**
+1. Your search: A text box where users can enter specific keywords or phrases related to their furniture needs.
+2. City: Another input field for specifying the city in which they want to find listings, allowing searches within particular geographic areas.
+3. Show only listings with pictures: An option that filters out ads without images if selected by checking this checkbox (not checked here).
+4. Price Min./Max.:
    - Two fields labeled "Min." and "Max.", enabling price range filtering so you specify your budget limits when searching.
 
-5. **Apply button:** This blue rectangular button allows applying any changes made through these filter settings back into the main listing area above it after entering values like prices etc., making sure all criteria match before displaying relevant items accordingly based upon those inputs provided earlier via respective dropdown menus/checkboxes available under each section mentioned previously herein above.
+5. Apply button: This blue rectangular button allows applying any changes made through these filter settings back into the main listing area above it after entering values like prices etc., making sure all criteria match before displaying relevant items accordingly based upon those inputs provided earlier via respective dropdown menus/checkboxes available under each section mentioned previously herein above.
 </shift>
-According to the observation above, I can input "Washington" in **City** to narrow down displayed products. Next, I need \
-to zoom in to check the id of **City**.
+According to the observation above, I can input "Washington" in City to narrow down displayed products. Next, I need \
+to zoom in to check the id of City.
 <zoom in>
-Because each bounding box and its respective id shares the same color, the color of **City**'s bounding box is pink and the color of id 7 is pink, \
-then the id of **City** is 7 
+Because each bounding box and its respective id shares the same color, the color of City's bounding box is pink and the color of id 7 is pink, \
+then the id of City is 7 
 </zoom in>
 
 <summary>
