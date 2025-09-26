@@ -1,0 +1,23 @@
+{
+  "webarena": {
+    "REDDIT": "http://reddit.example.com",
+    "SHOPPING": "http://shopping.example.com",
+    "SHOPPING_ADMIN": "http://shopping-admin.example.com",
+    "GITLAB": "http://gitlab.example.com",
+    "WIKIPEDIA": "http://wikipedia.example.com",
+    "MAP": "http://map.example.com",
+    "HOMEPAGE": "http://homepage.example.com"
+  },
+  "visualwebarena": {
+    "REDDIT": "http://127.0.0.1:9999",
+    "SHOPPING": "http://127.0.0.1:7770",
+    "WIKIPEDIA": "http://127.0.0.1:8888",
+    "CLASSIFIEDS": "http://127.0.0.1:9980",
+    "HOMEPAGE": "http://127.0.0.1:4399"
+  },
+  "annotate": {
+    "REDDIT": "http://127.0.0.1:9999",
+    "SHOPPING": "http://127.0.0.1:7770",
+    "CLASSIFIEDS": "http://127.0.0.1:9980"
+  }
+}

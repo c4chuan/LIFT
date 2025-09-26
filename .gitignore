@@ -9,9 +9,9 @@ vllm
 transformers
 Qwen
 merged_models
-visualwebarena
 vwa
 vwa_eval
+visualwebarena
 src/image_cache
 src/swanlog
 src/wandb

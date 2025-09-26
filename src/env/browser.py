@@ -34,7 +34,7 @@ from vwa.browser_env.utils import (
 )
 from vwa.browser_env import Trajectory
 from vwa.src.envs.processors import FastObservationHandler, FastCachedObservationHandler, ObservationMetadata
-from vwa.src.envs.actions import (
+from visualwebarena.src.envs.actions import (
     ActionTypes, Action,
     aexecute_action, get_action_space,
     actionhistory2str, is_equivalent

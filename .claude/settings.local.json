@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"data/human_trajectories\")",
+      "Bash(Select-Object Name)",
+      "Bash(Format-Table -HideTableHeaders)",
+      "Bash(find:*)",
+      "Bash(python:*)",
+      "Bash(Get-ChildItem -Path \"data\" -Recurse)",
+      "Bash(Format-Table Name,FullName,Length -AutoSize)",
+      "Bash(powershell:*)",
+      "Bash(conda activate:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
