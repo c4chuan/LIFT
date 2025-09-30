@@ -744,10 +744,9 @@ class AnnotationUI:
         if context['env_name'] and context['task_id']:
             summary_parts.append(f"环境: {context['env_name'].upper()} | ID: {context['task_id']}")
 
-        # 任务描述（截断显示）
+        # 任务描述（完整显示）
         if context['task_intent']:
-            intent = context['task_intent'][:50] + "..." if len(context['task_intent']) > 50 else context['task_intent']
-            summary_parts.append(f"目标: {intent}")
+            summary_parts.append(f"目标: {context['task_intent']}")
 
         # 当前URL信息
         if context['current_url']:
