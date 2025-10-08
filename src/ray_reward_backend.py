@@ -103,9 +103,7 @@ def get_rewards(batch: BatchRequest):
     torch.cuda.empty_cache()
     remote_paths = [req.image_path for req in batch.requests]
     responses = [req.response for req in batch.requests]
-    # with open("./resp.txt", "w", encoding="utf-8") as f:
-    #     f.write(str(responses))
-    # print(responses)
+
     request_response = requests.post(url=f"{BASE_URL}/get_valid_action_rewards", json={"responses":responses}).json()
     valid_action_rewards = request_response['rewards']
     # valid_action_rewards = [0.0 for _ in responses]
