@@ -275,7 +275,7 @@ class EnvironmentOrchestrator:
                 action = create_id_based_action(action_str)
                 action.obs_reward = response.reward_sum
 
-            action.update({"raw_prediction": response})
+            action.update({"raw_prediction": response.response})
             actions.append(action)
 
         # 获取PROCESSING状态的任务

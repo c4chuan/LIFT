@@ -142,6 +142,41 @@ class TaskPool:
 
             return task
 
+    def _update_task_state_unsafe(
+        self,
+        task_id: int,
+        new_state: TaskState
+    ) -> bool:
+        """
+        更新任务状态（内部方法，不加锁）
+
+        仅供内部在已加锁环境中调用
+
+        Args:
+            task_id: 任务ID
+            new_state: 新状态
+
+        Returns:
+            是否更新成功
+        """
+        task = self._tasks.get(task_id)
+        if not task:
+            return False
+
+        old_state = task.state
+
+        # 从旧状态索引中移除
+        if task_id in self._state_index[old_state]:
+            self._state_index[old_state].remove(task_id)
+
+        # 更新状态
+        task.state = new_state
+
+        # 添加到新状态索引
+        self._state_index[new_state].add(task_id)
+
+        return True
+
     async def update_task_state(
         self,
         task_id: int,
@@ -160,23 +195,7 @@ class TaskPool:
             是否更新成功
         """
         async with self._lock:
-            task = self._tasks.get(task_id)
-            if not task:
-                return False
-
-            old_state = task.state
-
-            # 从旧状态索引中移除
-            if task_id in self._state_index[old_state]:
-                self._state_index[old_state].remove(task_id)
-
-            # 更新状态
-            task.state = new_state
-
-            # 添加到新状态索引
-            self._state_index[new_state].add(task_id)
-
-            return True
+            return self._update_task_state_unsafe(task_id, new_state)
 
     async def enqueue_message(
         self,
@@ -220,7 +239,8 @@ class TaskPool:
             # 如果需要，标记任务为处理中
             if mark_as_processing:
                 for msg_item in messages:
-                    await self.update_task_state(
+                    # 使用内部方法，避免重复加锁
+                    self._update_task_state_unsafe(
                         msg_item.task_id,
                         TaskState.PROCESSING
                     )

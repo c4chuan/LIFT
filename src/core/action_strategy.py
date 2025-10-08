@@ -3,8 +3,11 @@
 
 使用策略模式区分监督学习和标准学习的动作决策逻辑
 """
+import random
 from abc import ABC, abstractmethod
 from typing import Any
+
+from torch.ao.quantization.backend_config.onednn import observation_type
 
 from src.models.task_models import VWATask
 
@@ -141,6 +144,11 @@ class SupervisedActionStrategy(IActionStrategy):
         Returns:
             True表示使用参考动作，False表示使用当前动作
         """
+        # TODO：改一下这里的逻辑
+        if random.random() < self.use_reference_probability:
+            return True
+        else:
+            return False
         if current_action.obs_reward > ref_action.obs_reward:
             return False
         else:

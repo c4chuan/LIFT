@@ -15,6 +15,9 @@ class ResponseList(BaseModel):
     """响应列表模型"""
     responses: List[str]
 
+class ResponseWithReward(BaseModel):
+    response: str
+    reward_sum: float
 
 def create_environment_router(orchestrator: EnvironmentOrchestrator) -> APIRouter:
     """
@@ -82,7 +85,7 @@ def create_environment_router(orchestrator: EnvironmentOrchestrator) -> APIRoute
 
     @router.post('/feed_responses')
     async def api_feed_responses(
-        responses: List[str],
+        responses: List[ResponseWithReward],
         background_tasks: BackgroundTasks
     ):
         """

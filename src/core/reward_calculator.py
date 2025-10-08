@@ -4,7 +4,7 @@
 提供动作验证和奖励计算功能
 """
 import re
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from src.models.task_models import VWATask
 from src.reward.reward_tools import get_action_id_answer, action_format_reward
@@ -92,6 +92,10 @@ class RewardCalculator:
         """
         根据动作信息计算奖励
 
+        新逻辑:
+        1. STOP动作: 保留原有的验证逻辑
+        2. 非STOP动作: 与参考轨迹中的动作进行对比(动作类型和element_id)
+
         Args:
             task: 任务实例
             action_info: 动作信息字典
@@ -100,47 +104,22 @@ class RewardCalculator:
         Returns:
             奖励值
         """
-        element_id = action_info.get('element_id', -1)
         answer = action_info.get('answer', None)
-        url = action_info.get('url', None)
 
-        # 情况1: 与element_id无关的动作
-        if element_id == -1:
-            return 0.0
-
-        # 情况2: 基于element_id的动作
-        elif element_id and int(element_id) > 0:
-            # 验证element_id是否有效
-            validation_reward = self._evaluate_action_validation(
-                task,
-                element_id=element_id
-            )
-
-            # 评估点击对齐度
-            alignment_reward = self._evaluate_action_click_alignment(
-                task,
-                element_id,
-                response
-            )
-
-            return validation_reward + alignment_reward
-
-        # 情况3: STOP类型动作（有answer）
-        elif isinstance(answer, str):
+        # 情况1: STOP动作 - 保留现有逻辑
+        if answer is not None:
             return self._evaluate_action_validation(
                 task,
                 answer=answer
             )
 
-        # 情况4: 导航类型动作（有url）
-        elif isinstance(url, str):
-            if "http://" in url or "https://" in url:
-                return 0.0
-            else:
-                return -1.0
-
+        # 情况2: 非STOP动作 - 与参考动作对比
         else:
-            return 0.0
+            return self._compare_with_reference_action(
+                task,
+                action_info,
+                response
+            )
 
     def _evaluate_action_validation(
         self,
@@ -255,3 +234,114 @@ class RewardCalculator:
         matches = re.findall(r'\[([^\]]*)\]', semantic_string)
         # 返回最后一个，否则返回空
         return matches[-1] if matches else ''
+
+    @staticmethod
+    def _extract_action_type_from_response(response: str) -> Optional[str]:
+        """
+        从响应中提取动作类型
+
+        Args:
+            response: 响应文本
+
+        Returns:
+            动作类型字符串(如 "click", "type", "scroll" 等),如果提取失败则返回None
+        """
+        # 从代码块中提取动作
+        pattern = r'```((.|\n)*?)```'
+        match = re.search(pattern, response)
+        if not match:
+            return None
+
+        action_str = match.group(1).strip()
+        if not action_str:
+            return None
+
+        # 提取动作类型(第一个单词或[之前的部分)
+        if "[" in action_str:
+            action_type = action_str.split("[")[0].strip()
+        else:
+            actions = action_str.split()
+            if actions:
+                action_type = actions[0].strip()
+            else:
+                return None
+
+        return action_type
+
+    def _compare_with_reference_action(
+        self,
+        task: VWATask,
+        action_info: Dict[str, Any],
+        response: str
+    ) -> float:
+        """
+        对比当前动作与参考动作
+
+        Args:
+            task: 任务实例
+            action_info: 当前动作信息
+            response: 响应文本
+
+        Returns:
+            奖励值: 1.0表示匹配,-1.0表示不匹配,0.0表示无法比较
+        """
+        # 检查是否为监督学习任务
+        if not task.is_supervised():
+            return 0.0
+
+        # 获取当前动作索引
+        action_index = task.get_current_action_index()
+
+        # 获取参考动作
+        ref_action = task.get_ref_action_at_index(action_index)
+        if ref_action is None:
+            return 0.0
+
+        # 提取当前动作类型
+        current_action_type = self._extract_action_type_from_response(response)
+        if current_action_type is None:
+            return 0.0
+
+        # 获取参考动作类型(从action字典中)
+        ref_action_type_id = ref_action.action_type
+        if ref_action_type_id is None:
+            return 0.0
+
+        # 将参考动作类型ID转换为字符串名称
+        # 根据ActionTypes枚举映射
+        action_type_mapping = {
+            0: "none",
+            1: "scroll",
+            2: "press",
+            6: "click",
+            7: "type",
+            8: "hover",
+            9: "page_focus",
+            10: "new_tab",
+            11: "go_back",
+            12: "go_forward",
+            13: "goto",
+            14: "close_tab",
+            17: "stop",
+            18: "clear",
+            19: "upload"
+        }
+        ref_action_type_name = action_type_mapping.get(ref_action_type_id, "unknown")
+
+        # 对比动作类型
+        if current_action_type.lower() != ref_action_type_name.lower():
+            return 0.0
+
+        # 动作类型匹配,进一步对比element_id(如果适用)
+        current_element_id = action_info.get('element_id')
+        ref_element_id = ref_action.element_id
+
+        # 如果两者都有element_id,则进行对比
+        if current_element_id and ref_element_id:
+            if str(current_element_id) == str(ref_element_id):
+                return 1.0
+            else:
+                return 0.0
+
+        # 如果没有element_id参与,动作类型匹配就算成功
+        return 1.0

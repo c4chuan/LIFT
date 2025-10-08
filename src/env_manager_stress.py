@@ -1,4 +1,6 @@
 import time
+import random
+
 import requests
 
 BASE_URL = "http://localhost:7333"
@@ -41,6 +43,13 @@ def test_get_rewards(responses,images):
     results = requests.post(f"http://localhost:7452/rewards", json=data)
 
     return results
+
+
+def test_get_valid_action_rewards(responses):
+    data = {"responses": responses}
+    results = requests.post(f"http://localhost:7333/get_valid_action_rewards", json=data)
+    return results
+
 def test_feed_responses(responses):
     """
     POST 到 /feed_responses，触发后台处理，不等待结果。
@@ -99,16 +108,19 @@ click [14]
 </summary>"""
     dummy_responses = [
         t_response,
-
     ]
     counter = 0
     for ti in range(100):
         # 3. 发送到 feed_responses（异步后台触发）
-        reward_responses = [t_response for _ in range(num)]
+        response_model = {
+            "response": t_response,
+            "reward_sum": random.uniform(0, 3)
+        }
+        reward_responses = [response_model for _ in range(num)]
         images = ["/data/wangzhenchuan/Projects/LIFT/src/0/step_0_obs.png" for i in range(num)]
-        # test_get_rewards(reward_responses, images)
-        test_feed_responses([dummy_responses[counter%len(dummy_responses)] for _ in range(num)])
-        time.sleep(20)
+        test_get_valid_action_rewards([t_response for _ in range(num)])
+        test_feed_responses(reward_responses)
+        time.sleep(5)
         # if ti%3 == 0:
         #     print("Refreshing env...")
         #     test_refresh_env()
