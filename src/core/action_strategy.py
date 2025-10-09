@@ -71,7 +71,7 @@ class SupervisedActionStrategy(IActionStrategy):
     - 渐进式替换等
     """
 
-    def __init__(self, use_reference_probability: float = 0.0):
+    def __init__(self, use_reference_probability: float = 1.0):
         """
         初始化监督学习策略
 

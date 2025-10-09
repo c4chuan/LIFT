@@ -4,50 +4,25 @@
         "eval_types": [
             "string_match"
         ],
-        "page_image_query": null,
         "program_html": [],
         "reference_answer_raw_annotation": "",
         "reference_answers": {
-            "fuzzy_match": null,
             "must_include": [
                 "Nowak"
             ]
         },
         "reference_url": "http://localhost:9980/index.php?page=item&id=6407",
-        "string_note": "",
-        "url_note": null
+        "string_note": ""
     },
     "geolocation": null,
     "image": null,
     "instantiation_dict": {
-        "action": null,
-        "attribute": null,
-        "category": null,
-        "comment": null,
-        "condition": null,
-        "criteria": null,
-        "description": null,
         "detail": "last name of the lister who posted the item on the page",
-        "hint": null,
-        "item": null,
-        "items": null,
-        "listing detail": null,
-        "location": null,
-        "phrase": null,
-        "product": "does not include jewelry in its image",
-        "quantity": null,
-        "range": null,
-        "rating": null,
-        "target": null,
-        "text": null,
-        "title": null,
-        "type": null
+        "product": "does not include jewelry in its image"
     },
     "intent": "Tell me the last name of the lister who posted the item on the page that does not include jewelry in its image?",
     "intent_template": "Tell me the {{detail}} that {{product}}?",
     "intent_template_id": 31,
-    "old_intent": null,
-    "old_intent_template": null,
     "overall_difficulty": "medium",
     "reasoning_difficulty": "easy",
     "require_login": true,

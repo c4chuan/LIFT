@@ -71,18 +71,83 @@ class EnvironmentOrchestrator:
         """
         print(f"正在初始化{num_envs}个环境...")
 
+        # 1. 创建任务实例
         tasks = []
         for i in range(num_envs):
             task = await self.task_pool.create_task()
             if task:
                 tasks.append(task)
 
-        if len(tasks) > 0:
-            # 并行生产初始消息
-            actions = [create_none_action() for _ in tasks]
-            await self.parallel_produce(tasks, actions)
+        if len(tasks) == 0:
+            print("未能创建任何环境")
+            return
+
+        # 2. 准备任务配置
+        config_files_to_prepare = [task.config_file for task in tasks]
+        task_infos = parallel_prepare(
+            self.config.cache_dir,
+            config_files_to_prepare,
+            max_workers=self.config.max_workers
+        )
+
+        # 3. 为每个任务设置task_info并构建reset协程
+        coros = []
+        for task, task_info in zip(tasks, task_infos):
+            task.task_info = task_info
+            coros.append(
+                task.env.areset(
+                    options={"config_file": task_info['config_file']}
+                )
+            )
+
+        # 4. 并行执行reset
+        try:
+            results = await asyncio.gather(*coros, return_exceptions=True)
+        except Exception as e:
+            print(f"初始化环境时出错: {e}")
+            return
+
+        # 5. 处理结果并构建初始消息
+        messages = []
+        task_ids = []
+
+        for task, result in zip(tasks, results):
+            # 检查是否有异常
+            if isinstance(result, Exception):
+                print(f"任务{task.task_id}初始化出错: {result}")
+                continue
+
+            obs, info = result
+            state_info = {
+                "observation": obs,
+                "info": info,
+                "url": task.env.page.url
+            }
+            task.state_trajectory.append(state_info)
+
+            # 构建消息
+            message = self.message_builder.construct_message(task, obs, info)
+            task.obs_info = info
+
+            messages.append(message)
+            task_ids.append(task.task_id)
+
+            # 更新任务状态为IDLE
+            await self.task_pool.update_task_state(task.task_id, TaskState.IDLE)
+
+            print(f"Task:{task.task_id} 初始化完成-加入消息队列")
+
+        # 6. 发送图片到服务器（如果需要）
+        if self.config.type == "remote":
+            self._send_images_to_server(task_ids, messages)
+
+        # 7. 将消息加入队列
+        for task, message in zip(tasks, messages):
+            if message:  # 确保消息有效
+                await self.task_pool.enqueue_message(task, message)
 
         print(f"环境初始化完成，创建了{len(tasks)}个环境")
+        self._print_status()
 
     async def parallel_produce(
         self,
@@ -103,16 +168,29 @@ class EnvironmentOrchestrator:
             actions: 对应的动作列表
         """
         async with self._production_lock:
-            # 1. 判断每个任务是否需要重置
+            # 1. 判断是否需要激活新任务
             task_flags = self._get_task_reset_flags(tasks, actions)
 
-            # 2. 准备需要reset的任务配置
+            # 2. 替换已结束的任务为新任务
+            for i, (task, needs_new_task) in enumerate(zip(tasks, task_flags)):
+                if needs_new_task:
+                    # 清理旧任务
+                    await self.task_pool.cleanup_task(task.task_id)
+                    # 创建新任务替换到原位置
+                    new_task = await self.task_pool.create_task()
+                    if new_task:
+                        tasks[i] = new_task
+                        print(f"任务{task.task_id}已结束，替换为新任务{new_task.task_id}")
+                    else:
+                        print(f"警告: 无法创建新任务替换任务{task.task_id}")
+
+            # 3. 准备新任务的任务配置
             config_files_to_prepare = []
-            for task, action, needs_reset in zip(tasks, actions, task_flags):
-                if needs_reset:
+            for task, action, needs_new_task in zip(tasks, actions, task_flags):
+                if needs_new_task:
                     config_files_to_prepare.append(task.config_file)
 
-            # 3. 并行准备任务信息
+            # 4. 并行准备任务信息
             task_infos = []
             if len(config_files_to_prepare) > 0:
                 task_infos = parallel_prepare(
@@ -121,12 +199,12 @@ class EnvironmentOrchestrator:
                     max_workers=self.config.max_workers
                 )
 
-            # 4. 构建协程列表
+            # 5. 构建协程列表
             coros = []
             info_index = 0
 
-            for task, action, needs_reset in zip(tasks, actions, task_flags):
-                if needs_reset:
+            for task, action, needs_new_task in zip(tasks, actions, task_flags):
+                if needs_new_task:
                     # 需要reset
                     task.task_info = task_infos[info_index]
                     coros.append(
@@ -145,14 +223,14 @@ class EnvironmentOrchestrator:
                     # 执行step
                     coros.append(task.env.astep(decided_action))
 
-            # 5. 并行执行所有协程
+            # 6. 并行执行所有协程
             try:
                 results = await asyncio.gather(*coros, return_exceptions=True)
             except Exception as e:
                 print(f"并行执行环境交互时出错: {e}")
                 return
 
-            # 6. 处理结果并构建消息
+            # 7. 处理结果并构建消息
             messages = []
             task_ids = []
 
@@ -216,16 +294,16 @@ class EnvironmentOrchestrator:
 
                 print(f"Task:{task.task_id}-Action:{action.action_type if hasattr(action, 'action_type') else 'NONE'}step完毕-加入消息队列")
 
-            # 7. 发送图片到服务器（如果需要）
+            # 8. 发送图片到服务器（如果需要）
             if self.config.type == "remote":
                 self._send_images_to_server(task_ids, messages)
 
-            # 8. 将消息加入队列
+            # 9. 将消息加入队列
             for task, message in zip(tasks, messages):
                 if message:  # 确保消息有效
                     await self.task_pool.enqueue_message(task, message)
 
-            # 9. 打印状态信息
+            # 10. 打印状态信息
             self._print_status()
 
     def _get_task_reset_flags(
@@ -245,12 +323,13 @@ class EnvironmentOrchestrator:
         """
         flags = []
         for task, action in zip(tasks, actions):
-            needs_reset = (
-                action.action_type == ActionTypes.NONE or
-                action.action_type == ActionTypes.STOP or
-                task.steps >= self.config.max_task_steps
+            print(f"任务{task.task_id}进行到第{task.steps}步了")
+            needs_new_task = (
+                # action.action_type == ActionTypes.NONE or
+                # task.steps >= self.config.max_task_steps or # 标注任务不存在最大步数
+                task.steps > len(task.ref_trajectory) // 2
             )
-            flags.append(needs_reset)
+            flags.append(needs_new_task)
         return flags
 
     async def feed_responses(self, responses: List[ResponseWithReward]):
@@ -302,7 +381,7 @@ class EnvironmentOrchestrator:
         # 触发异步生产（不等待）
         asyncio.create_task(self.parallel_produce(tasks_to_produce, actions))
 
-    def get_messages(self, num: int) -> List[Dict[str, Any]] | str:
+    async def get_messages(self, num: int) -> List[Dict[str, Any]] | str:
         """
         获取消息
 
@@ -326,10 +405,8 @@ class EnvironmentOrchestrator:
                 print(f"未知情况: queue_length={queue_length}, busy_count={busy_count}")
                 return []
 
-        # 同步方式取出消息
-        messages_items = asyncio.run(
-            self.task_pool.dequeue_messages(min(num, queue_length))
-        )
+        # 异步方式取出消息
+        messages_items = await self.task_pool.dequeue_messages(min(num, queue_length))
 
         messages = [item.message for item in messages_items]
 

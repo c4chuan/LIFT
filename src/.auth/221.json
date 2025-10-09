@@ -1,0 +1,36 @@
+{
+    "comments": "",
+    "eval": {
+        "eval_types": [
+            "string_match"
+        ],
+        "program_html": [],
+        "reference_answers": {
+            "must_include": [
+                "6"
+            ]
+        },
+        "reference_url": "",
+        "string_note": ""
+    },
+    "geolocation": null,
+    "image": null,
+    "instantiation_dict": {
+        "attribute": "bowls",
+        "listing detail": "there in this set of bowls"
+    },
+    "intent": "How many bowls are there in this set of bowls?",
+    "intent_template": "How many {{attribute}} are {{listing detail}}?",
+    "intent_template_id": 37,
+    "overall_difficulty": "easy",
+    "reasoning_difficulty": "easy",
+    "require_login": true,
+    "require_reset": false,
+    "sites": [
+        "classifieds"
+    ],
+    "start_url": "http://localhost:9980/index.php?page=item&id=48575",
+    "storage_state": "./.auth/classifieds_state.json",
+    "task_id": 221,
+    "visual_difficulty": "easy"
+}

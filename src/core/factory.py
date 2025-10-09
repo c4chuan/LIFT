@@ -56,7 +56,7 @@ class EnvironmentSystemFactory:
         # 4. 创建ActionStrategy
         action_strategy = create_action_strategy(
             mode=action_strategy_mode,
-            use_reference_probability=0.0  # 默认不使用参考动作
+            use_reference_probability=1.0  # 默认使用参考动作
         )
 
         # 5. 创建Orchestrator

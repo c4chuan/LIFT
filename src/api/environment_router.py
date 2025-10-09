@@ -51,7 +51,7 @@ def create_environment_router(orchestrator: EnvironmentOrchestrator) -> APIRoute
         while orchestrator.task_pool.get_tasks_by_state(TaskState.BUSY):
             await asyncio.sleep(0.1)
 
-        msgs = orchestrator.get_messages(num)
+        msgs = await orchestrator.get_messages(num)
         return {'messages': msgs}
 
     @router.get('/get_val_messages')
