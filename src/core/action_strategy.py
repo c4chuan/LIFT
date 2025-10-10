@@ -71,6 +71,47 @@ class SupervisedActionStrategy(IActionStrategy):
     - 渐进式替换等
     """
 
+    @staticmethod
+    def _convert_action_instance(source_action: Any) -> Any:
+        """
+        将不同模块的 Action 实例转换为统一的 Action 类型
+
+        由于参考轨迹中的 Action 可能来自不同模块（如 visualwebarena），
+        而当前环境使用的是另一个模块的 Action 类，
+        虽然两者结构相同，但 isinstance 检查会失败。
+        此函数通过复制所有字段值来创建正确类型的 Action 实例。
+
+        Args:
+            source_action: 源 Action 对象
+
+        Returns:
+            转换后的 Action 对象
+        """
+        from visualwebarena.src.envs.actions import Action
+        from dataclasses import fields
+
+        # 如果已经是正确的类型，直接返回
+        if isinstance(source_action, Action):
+            return source_action
+
+        # 提取所有字段值
+        field_values = {}
+        for field in fields(Action):
+            try:
+                field_values[field.name] = getattr(source_action, field.name)
+            except AttributeError:
+                # 如果源对象缺少某个字段，使用默认值
+                if field.default is not field.default_factory:
+                    field_values[field.name] = field.default
+                elif field.default_factory is not field.default_factory:
+                    field_values[field.name] = field.default_factory()
+                else:
+                    # 使用类型默认值
+                    field_values[field.name] = None
+
+        # 创建新的 Action 实例
+        return Action(**field_values)
+
     def __init__(self, use_reference_probability: float = 1.0):
         """
         初始化监督学习策略
@@ -120,7 +161,8 @@ class SupervisedActionStrategy(IActionStrategy):
         )
 
         if should_use_reference:
-            return ref_action
+            # 转换 ref_action 为当前 Action 类型
+            return self._convert_action_instance(ref_action)
         else:
             return current_action
 
@@ -208,7 +250,8 @@ class AdaptiveActionStrategy(IActionStrategy):
         should_use_reference = random.random() < self.probability
 
         if should_use_reference:
-            return ref_action
+            # 转换 ref_action 为当前 Action 类型
+            return SupervisedActionStrategy._convert_action_instance(ref_action)
         else:
             return current_action
 

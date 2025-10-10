@@ -220,56 +220,46 @@ To be successful, it is very important to follow the following rules:
 5. Issue stop action when you think you have achieved the objective. Don't generate anything after stop.""",},
     "LIFT":
         """
-You are an autonomous intelligent agent tasked with navigating a web browser. You will be given web-based tasks. These tasks will be accomplished through the use of specific actions you can issue.
-
 Here's the information you'll have:
 The user's objective: This is the task you're trying to complete.
 The current web page screenshot: This is a screenshot of the webpage, with each interactable element assigned a unique numerical id. Each bounding box and its respective id shares the same color.
 The current web page's URL: This is the page you're currently navigating.
-The open tabs: These are the tabs you have open.
-The previous action: This is the action you just performed. It may be helpful to track your progress.
+The previous actions: These are the actions that have been performed. It may be helpful to track the progress.
+The target action: This is the ground truth action that should be performed next.
 
-The actions you can perform fall into several categories:
+The actions can fall into several categories:
 
 Page Operation Actions:
-```click [id]```: This action clicks on an element with a specific id on the webpage.
-```type [id] [content]```: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., ```type [id] [content] [0]```.
-```hover [id]```: Hover over an element with id.
-```press [key_comb]```:  Simulates the pressing of a key combination on the keyboard (e.g., Ctrl+v).
-```scroll [down]``` or ```scroll [up]```: Scroll the page up or down.
+<action>click [id]</action>: This action clicks on an element with a specific id on the webpage.
+<action>type [id] [content]</action>: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., ```type [id] [content] [0]```.
+<action>hover [id]</action>: Hover over an element with id.
+<action>press [key_comb]</action>: Simulates the pressing of a key combination on the keyboard (e.g., Ctrl+v).
+<action>scroll [down]</action> or <action>scroll [up]</action>: Scroll the page up or down.
 
 Tab Management Actions:
-```new_tab```: Open a new, empty browser tab.
-```tab_focus [tab_index]```: Switch the browser's focus to a specific tab using its index.
-```close_tab```: Close the currently active tab.
+<action>new_tab</action>: Open a new, empty browser tab.
+<action>tab_focus [tab_index]</action>: Switch the browser's focus to a specific tab using its index.
+<action>close_tab</action>: Close the currently active tab.
 
 URL Navigation Actions:
-```goto [url]```: Navigate to a specific URL.
-```go_back```: Navigate to the previously viewed page.
-```go_forward```: Navigate to the next page (if a previous 'go_back' action was performed).
+<action>goto [url]</action>: Navigate to a specific URL.
+<action>go_back</action>: Navigate to the previously viewed page.
+<action>go_forward</action>: Navigate to the next page (if a previous 'go_back' action was performed).
 
 Completion Action:
-```stop [answer]```: Issue this action when you believe the task is complete. If the objective is to find a text-based answer, provide the answer in the bracket.
+<action>stop [answer]</action>: Issue this action when you believe the task is complete. If the objective is to find a text-based answer, provide the answer in the bracket.
 
-Homepage:
-If you want to visit other websites, check out the homepage at http://homepage.com. It has a list of websites you can visit.
-http://homepage.com/password.html lists all the account name and password for the websites. You can use them to log in to the websites.
-
-Perceive the environment:
-You should take two observing strategies, zoom in and shift,  to perceive the environment, then aggregate the observation and form the decision of the final action.
-<zoom in></zoom in>: take a closer look at the details in the screenshot. So the area you observe in this strategy must be the subset of the area of your last observation.
-<shift></shift>: focus on where you hasn't explored in your observation. So the area you observe in this strategy must be somewhere informative in the screenshot but hasn't been explored in your previous observations.
-<summary></summary>: summarize all observation results and form the decision of the final action.
+Perceive the environment and generate reasoning:
+You should take two observing strategies, zoom in and shift, to perceive the environment, then aggregate the observation and form the reasoning for the target action.
+<zoom in></zoom in>: take a closer look at the details in the screenshot. The area you observe in this strategy should focus on relevant elements for the target action.
+<shift></shift>: focus on other informative areas in the screenshot that haven't been explored in your previous observations.
+<summary></summary>: summarize all observation results and explain why the target action is reasonable and necessary.
 
 To be successful, it is very important to follow the following rules:
-1. You should only issue an action that is valid given the current observation
-2. You should only issue one action at a time.
-3. You should follow the examples to observe step by step and then issue the next action.
-4. Generate the action in the correct format. Start with a "Let's observe step by step" phrase, followed by your observations contained in <zoom in></zoom in> and <shift></shift>, finally \
-aggregate the observations and form an action inside ``````, and this part is contained in <summary></summary>.
-5. Issue stop action when you think you have achieved the objective. Don't generate anything after stop.
-6. !!IMPORTANT!! The content of each observation must be contained within <zoom in></zoom in> and <shift></shift> and end with your summary in <summary></summary>.\
-Your summary MUST have an valid action inside"""
+1. Your reasoning should be detailed and explain how you observe the page to reach the target action.
+2. Your reasoning should be logically clear with explicit steps.
+3. The content of each observation must be contained within <zoom in></zoom in> and <shift></shift>, your summary in <summary></summary> and your action should be contained within <action></action>.
+4. Your summary MUST explain why the target action is the correct next step."""
 }
 EXAMPLES = {
     "original":
@@ -436,8 +426,12 @@ Observations so far:
 3. Zooming the Highland House Accent Chair thumbnail shows it is beige, not blue.
 4. No blue chair in Washington, D.C. appears on this page, so we need to use the Search Filters Area to narrow results by city.
 
-So the next action I will perform is ```type [7] [Washington] [0]```
+So the next action I will perform is type [7] [Washington] [0]
 </summary>
+
+<action>
+type [7] [Washington] [0]
+</action>
 """,
 				"image": """/data/wangzhenchuan/Projects/LIFT/data/example/example.png"""
 			}

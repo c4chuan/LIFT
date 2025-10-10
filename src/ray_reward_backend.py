@@ -57,8 +57,7 @@ class RewardRequest(BaseModel):
 class RewardResult(BaseModel):
     shift_reward: float
     zoom_reward: float
-    a_format_reward: float
-    s_format_reward: float
+    format_reward: float
     valid_action_reward: float
 
 class BatchRequest(BaseModel):
@@ -123,15 +122,14 @@ def get_rewards(batch: BatchRequest):
 
     # 将 raw_results 和 valid_action_rewards 合并，构造 Pydantic 返回模型
     results = []
-    for idx, (sr, zr, af, sf) in enumerate(raw_results):
+    for idx, (sr, zr,fr) in enumerate(raw_results):
         # 如果 valid_action_rewards 长度不够，则默认 0.0
         val = valid_action_rewards[idx] if idx < len(valid_action_rewards) else 0.0
         results.append(
             RewardResult(
                 shift_reward=sr,
                 zoom_reward=zr,
-                a_format_reward=af,
-                s_format_reward=sf,
+                format_reward=fr,
                 valid_action_reward=val
             )
         )

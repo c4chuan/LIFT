@@ -17,17 +17,17 @@ from src.utils.data_tools import supervise_dataset_construct
 
 # ============ 配置部分 ============
 initial_configs = Box({
-    'max_num_envs': 2,
+    'max_num_envs': 8,
     'initial_refresh_env': False,
     'cache_dir': './.auth',
     'env_name': 'classifieds',
     'results_dir': '/data/wangzhenchuan/Projects/LIFT/results',
-    'max_task_steps': 4,
+    'max_task_steps': 6,
     'scp_version': 'cmd',
     'type': 'remote',
     'target_server': '192.168.1.5',
     'instruction_path': '/data/wangzhenchuan/Projects/LIFT/visualwebarena/src/prompts/vwa/jsons/lift.json',
-    'annotate_path': '../data/annotate/trajectories',
+    'annotate_path': '../data/annotate_with_reasoning',
     'annotate_envs': 'classifieds'
 })
 

@@ -11,7 +11,7 @@ import wandb
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor,AutoTokenizer,AutoModelForCausalLM
 from qwen_vl_utils import process_vision_info
 from src.utils.visualize_tools import show_mask_on_image, visualize_tensor_distribution, plot_1d_tensor
-from src.reward.reward_tools import action_format_reward,summary_format_reward
+from src.reward.reward_tools import format_reward_cal
 
 # 可选的 accelerate 导入
 try:
@@ -72,7 +72,7 @@ class Rewarder:
 
     def _compute_format_reward(self,response):
         """计算格式奖励"""
-        return action_format_reward(response),summary_format_reward(response)
+        return format_reward_cal(response)
 
     def reward(self,response,image_path,visualize = False,visual_save = None):
         """
@@ -94,7 +94,7 @@ class Rewarder:
         if torch.cuda.is_available() and device.type == 'cuda':
             torch.cuda.reset_peak_memory_stats(device)
 
-        a_format_reward,s_format_reward = self._compute_format_reward(response)
+        format_reward = self._compute_format_reward(response)
 
         # 1. 从response中提取标签,组装新的input_text,并提取出观察序列
         processed_input,obs_seq = self._get_processed_input(response)
@@ -563,14 +563,14 @@ class ChunkRewarder(Rewarder):
         if torch.cuda.is_available() and device.type == 'cuda':
             torch.cuda.reset_peak_memory_stats(device)
 
-        a_format_reward,s_format_reward = self._compute_format_reward(response)
+        format_reward = self._compute_format_reward(response)
 
         # 1. 从response中提取标签,组装新的input_text,并提取出观察序列
         processed_input,obs_seq = self._get_processed_input(response)
 
         if len(obs_seq)== 0:
             # 如果没有观察序列，可以直接返回了
-            return 0,0,a_format_reward,s_format_reward
+            return 0,0,0.025*format_reward
 
         # 4. 计算reward
         shift_reward,zoom_reward = self._compute_reward(obs_seq,processed_input,image_path,visualize,visual_save)
@@ -580,7 +580,7 @@ class ChunkRewarder(Rewarder):
             peak_mib = peak_bytes / (1024 ** 2)
             print(f"[Rewarder] Peak GPU memory during reward(): {peak_mib:.1f} MiB")
 
-        return 1.5*shift_reward,1.5*zoom_reward,0.1*a_format_reward,0.1*s_format_reward
+        return shift_reward,zoom_reward,0.025*format_reward
 
     def _aggregate_attentions(self,attn):
         """attn[0][0]是一个长度为层数的列表，每个元素是size为[1,28,N,N]的tensor

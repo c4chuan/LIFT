@@ -128,7 +128,7 @@ def create_environment_router(orchestrator: EnvironmentOrchestrator) -> APIRoute
             奖励列表
         """
         try:
-            rewards = orchestrator.get_valid_action_rewards(responselist.responses)
+            rewards = await orchestrator.get_valid_action_rewards(responselist.responses)
             return {'rewards': rewards}
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"计算奖励失败: {str(e)}")

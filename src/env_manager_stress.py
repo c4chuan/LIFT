@@ -102,10 +102,13 @@ Observations so far:
 - The initiation action was clicking 'Video gaming', so we need a next step to adjust the clasification. Since there are steering options, I'll check elements that might navigate to another categorization.
 
 Action: Click the 'Video gaming' option in column C to change from the current topic.
-```
-click [14]
-```
-</summary>"""
+</summary>
+<action>
+stop [26]
+</action>
+"""
+
+
     dummy_responses = [
         t_response,
     ]

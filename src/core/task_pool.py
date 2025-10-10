@@ -10,7 +10,7 @@ from collections import defaultdict
 
 from src.models.task_models import VWATask, TaskState, MessageQueueItem
 from src.config.environment_config import EnvironmentConfig
-from vwa.src.envs.browser import FastCachedwActionMatchingBrowserEnv
+from visualwebarena.src.envs.browser import FastCachedwActionMatchingBrowserEnv
 
 
 class TaskPool:
@@ -135,10 +135,7 @@ class TaskPool:
             self._state_index[TaskState.IDLE].add(task.task_id)
 
             # 更新指针
-            self._task_pointer = (self._task_pointer + 1) % min(
-                len(self.task_configs),
-                self.config.task_pointer_limit
-            )
+            self._task_pointer = (self._task_pointer + 1) % len(self.task_configs)
 
             return task
 
@@ -284,6 +281,19 @@ class TaskPool:
         return {
             state.value: len(task_ids)
             for state, task_ids in self._state_index.items()
+        }
+
+    def get_state_details(self) -> Dict[str, List[int]]:
+        """
+        获取各状态的任务ID列表
+
+        Returns:
+            状态详情字典 {状态名: [任务ID列表]}
+        """
+        return {
+            state.value: sorted(list(task_ids))
+            for state, task_ids in self._state_index.items()
+            if len(task_ids) > 0  # 只返回非空状态
         }
 
     async def cleanup_task(self, task_id: int):

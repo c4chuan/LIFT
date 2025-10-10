@@ -24,7 +24,7 @@ class RewardCalculator:
         """初始化奖励计算器"""
         pass
 
-    def calculate_batch_rewards(
+    async def calculate_batch_rewards(
         self,
         responses: List[str],
         tasks: List[VWATask]
@@ -44,12 +44,12 @@ class RewardCalculator:
 
         rewards = []
         for response, task in zip(responses, tasks):
-            reward = self.calculate_single_reward(response, task)
+            reward = await self.calculate_single_reward(response, task)
             rewards.append(reward)
 
         return rewards
 
-    def calculate_single_reward(
+    async def calculate_single_reward(
         self,
         response: str,
         task: VWATask
@@ -75,7 +75,7 @@ class RewardCalculator:
             return 0.0
 
         # 3. 根据动作信息计算奖励
-        reward = self._calculate_reward_by_action_info(
+        reward = await self._calculate_reward_by_action_info(
             task,
             action_info,
             response
@@ -83,7 +83,7 @@ class RewardCalculator:
 
         return reward
 
-    def _calculate_reward_by_action_info(
+    async def _calculate_reward_by_action_info(
         self,
         task: VWATask,
         action_info: Dict[str, Any],
@@ -93,7 +93,7 @@ class RewardCalculator:
         根据动作信息计算奖励
 
         新逻辑:
-        1. STOP动作: 保留原有的验证逻辑
+        1. STOP动作: 使用 evaluator 进行评估
         2. 非STOP动作: 与参考轨迹中的动作进行对比(动作类型和element_id)
 
         Args:
@@ -106,9 +106,9 @@ class RewardCalculator:
         """
         answer = action_info.get('answer', None)
 
-        # 情况1: STOP动作 - 保留现有逻辑
+        # 情况1: STOP动作 - 使用 evaluator 评估
         if answer is not None:
-            return self._evaluate_action_validation(
+            return await self._evaluate_action_validation(
                 task,
                 answer=answer
             )
@@ -121,7 +121,7 @@ class RewardCalculator:
                 response
             )
 
-    def _evaluate_action_validation(
+    async def _evaluate_action_validation(
         self,
         task: VWATask,
         element_id: Any = None,
@@ -136,7 +136,7 @@ class RewardCalculator:
             answer: 答案（可选）
 
         Returns:
-            奖励值（0.0表示有效但不加分，-1.0表示无效扣分）
+            奖励值（0.0-1.0表示评估得分，-1.0表示无效扣分）
         """
         # 验证element_id是否在有效范围内
         if element_id is not None:
@@ -147,11 +147,35 @@ class RewardCalculator:
             else:
                 return -1.0  # 无效，扣分
 
-        # 验证STOP动作的答案
+        # 验证STOP动作的答案 - 使用 evaluator
         elif answer is not None:
-            # TODO: 这里可以集成evaluator来验证答案正确性
-            # 目前暂时返回0.0
-            return 0.0
+            try:
+                from visualwebarena.src.evaluation.vwa_evaluators import evaluator_router
+                from visualwebarena.browser_env.actions import create_stop_action
+
+                # 构造带 answer 的 STOP action
+                stop_action = create_stop_action(answer)
+
+                # 使用现有的 state_trajectory，追加 STOP action
+                trajectory = task.state_trajectory + [stop_action]
+
+                # 调用 evaluator
+                evaluator = evaluator_router(task.task_info['config_file'], captioning_fn=None)
+                score = await evaluator(
+                    trajectory=trajectory,
+                    config_file=task.task_info['config_file'],
+                    page=task.env.page
+                )
+
+                # 打印评估结果
+                print(f"Task:{task.task_id}-STOP动作评估-Answer:[{answer}]-Score:{score}")
+
+                return score  # 0.0 或 1.0
+            except Exception as e:
+                print(f"评估 STOP 动作时出错: {e}")
+                import traceback
+                traceback.print_exc()
+                return 0.0
 
         else:
             return 0.0

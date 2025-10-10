@@ -2,7 +2,7 @@ import re
 
 def action_format_reward(response):
     # find the first occurence of action
-    pattern = rf"```((.|\n)*?)```"
+    pattern = rf"<action>((.|\n)*?)</action>"
     match = re.search(pattern, response)
     if match:
         # 检查是否有多个匹配
@@ -108,7 +108,7 @@ def action_format_reward(response):
 
 def get_action_id_answer(response):
     # find the first occurence of action
-    pattern = rf"```((.|\n)*?)```"
+    pattern = rf"<action>((.|\n)*?)</action>"
     match = re.search(pattern, response)
     action_info = {
         "element_id": -1,
@@ -211,21 +211,38 @@ def get_action_id_answer(response):
             return action_info
     return action_info
 
-def summary_format_reward(response):
+def format_reward_cal(response):
+    format_reward = 0.0
     pattern = r'<summary>([\s\S]*?)</summary>'
     match = re.search(pattern, response)
     if match:
-        return 1.0
-    else:
-        return 0.0
+        format_reward += 1.0
+    pattern = r'<zoom in>([\s\S]*?)</zoom in>'
+    match = re.search(pattern, response)
+    if match:
+        format_reward += 1.0
+    pattern = r'<shift>([\s\S]*?)</shift>'
+    match = re.search(pattern, response)
+    if match:
+        format_reward += 1.0
+    return format_reward + action_format_reward(response)
 
 if __name__ == "__main__":
-    r = action_format_reward("""<summary>
-Observation: The "Category" dropdown menu is open, and the "Xbox" category is visible among the options. The next step is to select the "Xbox" category to filter the listings.
-</summary>
-```
-click [5]
-```
-""")
-    print(r)
+    r = """
+Based on the screenshot, here is the relevant part of the page with the buttons, elements, and lists:
+
+1. **Keyword:**
+   - [25] "Century Furniture English Roll Arm Sofa" - Laid down
+   - [30] Complete Guitar Rig Full Size HSS Black
+   - [31] Guitar Gig Bag with Keys
+   - [40] Marshall APM 112 1x12 Compact Cabinet Amplifier
+
+According to the observations above, the list does not contain a query option to filter for a specific price range or item attributes. It seems necessary to add a new method to filter based on color and price to satiate the goal. The hints are for a query box and other filter buttons. The aim is to find the best method to filter for attributes using the relevant applicable query or filters.
+
+Proceeding with a new search by refreshing or using advanced search filters:
+<action>
+press [Enter]
+</action>
+"""
+    print(format_reward_cal(r))
 

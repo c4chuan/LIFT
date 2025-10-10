@@ -16,7 +16,7 @@ from src.core.action_strategy import IActionStrategy
 from src.models.task_models import VWATask, TaskState
 from src.env.envtools import parallel_prepare, refresh_env_login, reset_env
 from src.utils.scp_tools import parallel_scp_to_remote, parallel_scp_to_remote_cmd_version
-from vwa.src.envs.actions import create_none_action, create_id_based_action, ActionTypes
+from visualwebarena.src.envs.actions import create_none_action, create_id_based_action, ActionTypes
 
 
 class ResponseWithReward(BaseModel):
@@ -135,7 +135,7 @@ class EnvironmentOrchestrator:
             # 更新任务状态为IDLE
             await self.task_pool.update_task_state(task.task_id, TaskState.IDLE)
 
-            print(f"Task:{task.task_id} 初始化完成-加入消息队列")
+            print(f"Task:{task.task_id}-State:{task.state.value}-初始化完成-加入消息队列")
 
         # 6. 发送图片到服务器（如果需要）
         if self.config.type == "remote":
@@ -201,6 +201,7 @@ class EnvironmentOrchestrator:
 
             # 5. 构建协程列表
             coros = []
+            decided_actions = []  # 保存每个任务实际执行的动作
             info_index = 0
 
             for task, action, needs_new_task in zip(tasks, actions, task_flags):
@@ -212,16 +213,34 @@ class EnvironmentOrchestrator:
                             options={"config_file": task_infos[info_index]['config_file']}
                         )
                     )
+                    decided_actions.append(None)  # reset情况下不需要动作
                     info_index += 1
                 else:
                     # 执行step前，先决定使用哪个动作
                     decided_action = self.action_strategy.decide_action(task, action)
+
+                    # 获取动作描述（使用实际执行的动作）
+                    obs = task.state_trajectory[-1]['observation']
+                    info = task.state_trajectory[-1]['info']
+                    state_info = {
+                        "observation": obs,
+                        "info": info,
+                        "url": task.env.page.url
+                    }
+                    action_str = ActionDescriptionHelper.get_action_description(
+                        decided_action,  # 使用实际执行的动作，而不是原始的action
+                        state_info["info"]["observation_metadata"],
+                        action_set_tag=self.config.action_set_tag,
+                        prompt_constructor=self.message_builder.prompt_constructor
+                    )
+                    task.action_history.append(action_str)
 
                     # 将动作添加到state_trajectory
                     task.state_trajectory.append(decided_action)
 
                     # 执行step
                     coros.append(task.env.astep(decided_action))
+                    decided_actions.append(decided_action)  # 保存实际执行的动作
 
             # 6. 并行执行所有协程
             try:
@@ -235,7 +254,7 @@ class EnvironmentOrchestrator:
             task_ids = []
 
             result_index = 0
-            for task, action, needs_reset in zip(tasks, actions, task_flags):
+            for task, action, needs_reset, decided_action in zip(tasks, actions, task_flags, decided_actions):
                 result = results[result_index]
                 result_index += 1
 
@@ -273,15 +292,6 @@ class EnvironmentOrchestrator:
                     }
                     task.state_trajectory.append(state_info)
 
-                    # 获取动作描述
-                    action_str = ActionDescriptionHelper.get_action_description(
-                        action,
-                        state_info["info"]["observation_metadata"],
-                        action_set_tag=self.config.action_set_tag,
-                        prompt_constructor=self.message_builder.prompt_constructor
-                    )
-                    task.action_history.append(action_str)
-
                     # 构建消息
                     message = self.message_builder.construct_message(task, obs, info)
                     task.obs_info = info
@@ -292,7 +302,8 @@ class EnvironmentOrchestrator:
                 # 更新任务状态为IDLE
                 await self.task_pool.update_task_state(task.task_id, TaskState.IDLE)
 
-                print(f"Task:{task.task_id}-Action:{action.action_type if hasattr(action, 'action_type') else 'NONE'}step完毕-加入消息队列")
+                print(f"Task:{task.task_id}-State:{task.state.value}-Action:{decided_action.action_type if hasattr(decided_action, 'action_type') else 'NONE'}-step完毕-加入消息队列")
+
 
             # 8. 发送图片到服务器（如果需要）
             if self.config.type == "remote":
@@ -327,7 +338,8 @@ class EnvironmentOrchestrator:
             needs_new_task = (
                 # action.action_type == ActionTypes.NONE or
                 # task.steps >= self.config.max_task_steps or # 标注任务不存在最大步数
-                task.steps > len(task.ref_trajectory) // 2
+                # action.action_type == ActionTypes.STOP or
+                task.steps > len(task.ref_trajectory) // 2 - 1 # 最后一步总是 STOP
             )
             flags.append(needs_new_task)
         return flags
@@ -415,7 +427,7 @@ class EnvironmentOrchestrator:
 
         return messages
 
-    def get_valid_action_rewards(self, responses: List[str]) -> List[float]:
+    async def get_valid_action_rewards(self, responses: List[str]) -> List[float]:
         """
         计算动作奖励
 
@@ -437,13 +449,13 @@ class EnvironmentOrchestrator:
         rewards = []
         for i, task in enumerate(processing_tasks):
             task_responses = responses[i * batch_size:(i + 1) * batch_size]
-            task_rewards = self.reward_calculator.calculate_batch_rewards(
+            task_rewards = await self.reward_calculator.calculate_batch_rewards(
                 task_responses,
                 [task] * len(task_responses)
             )
             rewards.extend(task_rewards)
 
-        return rewards
+        return [0.3*reward for reward in rewards]
 
     def refresh_env(self):
         """刷新环境"""
@@ -495,7 +507,9 @@ class EnvironmentOrchestrator:
 
     def _print_status(self):
         """打印当前状态"""
-        state_counts = self.task_pool.get_state_counts()
+        state_details = self.task_pool.get_state_details()
         queue_length = self.task_pool.get_message_queue_length()
 
-        print(f"状态统计: {state_counts}, 消息队列: {queue_length}")
+        # 格式化状态详情
+        status_str = ", ".join([f"{state}:{ids}" for state, ids in state_details.items()])
+        print(f"状态详情: {status_str}, 消息队列: {queue_length}")
