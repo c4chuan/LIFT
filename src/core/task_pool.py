@@ -98,15 +98,32 @@ class TaskPool:
             新创建的任务，如果无可用配置返回None
         """
         async with self._lock:
-            if self._task_pointer >= len(self.task_configs):
-                return None
+            # 查找未创建的任务配置
+            attempts = 0
+            task_config = None
 
-            # 获取任务配置
-            task_config = self.task_configs[self._task_pointer]
+            while attempts < len(self.task_configs):
+                # 获取当前指针指向的配置
+                current_config = self.task_configs[self._task_pointer]
+                task_id = current_config['task_id']
+
+                # 如果该任务ID尚未创建，则使用这个配置
+                if task_id not in self._tasks:
+                    task_config = current_config
+                    break
+
+                # 该任务已存在，移动指针到下一个配置
+                self._task_pointer = (self._task_pointer + 1) % len(self.task_configs)
+                attempts += 1
+
+            # 如果所有任务都已创建，返回None
+            if task_config is None:
+                return None
 
             # 提取ref_trajectory（如果存在）
             ref_trajectory = task_config.get('ref_trajectory', None)
             config_without_ref = {k: v for k, v in task_config.items() if k != 'ref_trajectory'}
+
 
             # 创建环境实例
             env = FastCachedwActionMatchingBrowserEnv(
