@@ -50,6 +50,12 @@ class EnvironmentManager:
             if _task.task_id == task.task_id:
                 return i
 
+    def is_new_task_needed(self,task,action):
+        if action.action_type == ActionTypes.NONE or action.action_type == ActionTypes.STOP or task.steps >= 10:
+            return 1
+        else:
+            return 0
+
     def create_new_task(self):
         if self.task_pointer < len(self.tasks):
             new_task = VWATask(
@@ -81,7 +87,7 @@ class EnvironmentManager:
         config_files = [] # for env.reset
         counter = 0
         for task,action in zip(Tasks,Actions):
-            if action.action_type == ActionTypes.NONE or action.action_type == ActionTypes.STOP:
+            if self.is_new_task_needed(task,action):
                 if task in self.prev_tasks:
                     config_files.append(self.tasks[self.task_pointer+counter])
                     counter += 1
@@ -93,7 +99,7 @@ class EnvironmentManager:
 
         processed_tasks = []
         for task,action in zip(Tasks,Actions):
-            if action.action_type == ActionTypes.NONE or action.action_type == ActionTypes.STOP:
+            if self.is_new_task_needed(task,action):
                 if task in self.prev_tasks:
                     new_task = self.create_new_task()
                     self.prev_tasks[self.find_index(self.prev_tasks,task)] = new_task
@@ -117,7 +123,7 @@ class EnvironmentManager:
         pct = PromptConstructor(self.results_dir)
         messages = []
         for task,action,result in zip(processed_tasks,Actions,results):
-            if action.action_type == ActionTypes.NONE or action.action_type == ActionTypes.STOP:
+            if self.is_new_task_needed(task,action):
                 obs,info = result
                 message = pct.construct_messages(task,obs,info,guidance='LIFT',examples='LIFT')
             else:
@@ -149,7 +155,7 @@ class EnvironmentManager:
         pct = PromptConstructor(self.results_dir)
         for response in responses:
             action_str = pct.extract_action(response)
-            if action_str == None:
+            if action_str == None or action_str == "None":
                 actions.append(create_none_action())
             else:
                 actions.append(create_id_based_action(action_str))
@@ -208,6 +214,29 @@ class EnvironmentManager:
                 print(f"未知情况")
         return return_messages
 
+    def get_val_messages(self, num):
+        """
+        Consumer calls this to retrieve up to `num` messages for sampling.
+        """
+        print(f"需要取出前{num}条消息")
+        return_messages = []
+        try:
+            for task,message in self.message_queue[:num]:
+                print(f"取出Task{task.task_id}的消息")
+                return_messages.append(message)
+            print(
+                f"现在处于消息队列中的任务有{len(self.message_queue)}个，task_id分别是{str([t.task_id for t, _ in self.message_queue])}")
+        except  IndexError:
+            if len(self.busy_tasks) > 0:
+                print(f"现在的消息队列中的有效消息不足，正在生产中")
+                return []
+            elif self.task_pointer >= len(self.tasks):
+                print(f"任务队列已用完")
+                return "Finished"
+            else:
+                print(f"未知情况")
+        return return_messages
+
     def refresh_env(self,env_name):
         """
         刷新环境
@@ -219,11 +248,11 @@ class EnvironmentManager:
 dataset = dataset_construct()
 tasks_cfg = list(dataset)
 initial_configs = Box({
-    'max_num_envs': 4,
+    'max_num_envs': 8,
     'initial_refresh_env': True,
     'cache_dir': './.auth',
     'env_name': 'classifields',
-    'results_dir': '../results'
+    'results_dir': '/data/wangzhenchuan/Projects/LIFT/results'
 })
 env_manager = EnvironmentManager(initial_configs, tasks_cfg)
 
@@ -237,12 +266,24 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+@app.get('/get_length')
+async def api_get_length():
+    return {"length": len(env_manager.tasks)}
+
 @app.get('/get_messages')
 async def api_get_messages(num: int):
     # Wait until enough messages are available or no busy tasks remain
     while len(env_manager.message_queue) < num and env_manager.busy_tasks:
         await asyncio.sleep(0.1)
     msgs = env_manager.get_messages(min(num, len(env_manager.message_queue)))
+    return {'messages': msgs}
+
+@app.get('/get_val_messages')
+async def api_get_val_messages(num: int):
+    # Wait until enough messages are available or no busy tasks remain
+    while len(env_manager.message_queue) < num and env_manager.busy_tasks:
+        await asyncio.sleep(0.1)
+    msgs = env_manager.get_val_messages(min(num, len(env_manager.message_queue)))
     return {'messages': msgs}
 
 @app.post('/feed_responses')
@@ -254,6 +295,10 @@ def api_feed_responses(responses: List[str], background_tasks: BackgroundTasks):
 def api_refresh_env():
     env_manager.refresh_env(env_manager.env_name)
     return {'status': 'refreshed'}
+
+@app.get('/get_is_last_batch')
+def api_get_is_last_batch():
+    return {'flag': env_manager.task_pointer>len(env_manager.tasks)}
 
 @app.post('/feed_actions')
 def api_feed_actions(actions: List[Any], background_tasks: BackgroundTasks):

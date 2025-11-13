@@ -44,11 +44,12 @@ if __name__ == "__main__":
     #    这里假设环境 manager 构造的 messages 长这样，你可以根据实际格式调整
     #    例如，如果 LLM 期望的 action 字符串为 "click_button_5"，则填入相应值
     dummy_responses = [
-        "```click [5]```",
-        "```click [10]```",
-        "```click [3]```",
-        "```scroll down```",
-        "```stop [aaa]```"
+        "```click [99]```",
+        # "```click [10]```",
+        # "```click [3]```",
+        # "```scroll down```",
+        "```None```"
+
     ]
     counter = 0
     for _ in range(100):

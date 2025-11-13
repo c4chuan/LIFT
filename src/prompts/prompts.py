@@ -280,3 +280,25 @@ OBJECTIVE: {intent}
 PREVIOUS ACTION: {previous_action}
 """
 }
+
+example_messages_from_manager = [
+        {
+            "role":"user",
+            "content":[
+                {"text":"你好"},
+            ]
+        },
+        {
+            "role":"assistant",
+            "content":[
+                {"text":"你好"},
+            ]
+        },
+        {
+            "role":"user",
+            "content":[
+                {"text":"你好"},
+                {"image":"/data/wangzhenchuan/Projects/LIFT/data/example/example.png"}
+            ]
+        }
+    ]

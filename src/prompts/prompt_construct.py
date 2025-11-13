@@ -5,6 +5,63 @@ import re
 
 from src.prompts.prompts import GUIDANCE,EXAMPLES,TEMPLATE
 
+def construct_messages_by_elements(intent,url, screenshot, previous_actions, guidance = 'LIFT', examples = 'LIFT'):
+    messages = []
+    examples = EXAMPLES[examples]
+
+    # 添加guidance
+    messages.append(
+        {
+            "role": "system",
+            "content": [
+                {
+                    "text": GUIDANCE[guidance]
+                }
+            ]
+        }
+    )
+
+    # 添加examples
+    for example in examples:
+        messages += [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "text": example['query'],
+                    },
+                    {
+                        "image": example['image']
+                    }
+                ]
+            },
+            {
+                "role": "assistant",
+                "content": [
+                    {
+                        "text": example['answer']
+                    }
+                ]
+            }
+        ]
+
+        # 组装query
+        query = TEMPLATE[guidance].format(url=url,intent=intent,previous_action=previous_actions)
+        messages.append({
+            "role": "user",
+            "content": [
+                {
+                    "text": query
+                },
+                {
+                    "image": screenshot
+                }
+            ]
+        })
+
+        return messages
+
+
 class PromptConstructor:
     def __init__(self,save_dir):
         self.save_dir = save_dir

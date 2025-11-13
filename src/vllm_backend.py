@@ -48,10 +48,10 @@ class ResponseSampler:
 
         sampling_params = SamplingParams(
             n=n,
-            temperature=0.7,
-            top_p=0.9,
-            repetition_penalty=1.1,
-            max_tokens=2048,
+            temperature=0.0,
+            top_p=1,
+            # repetition_penalty=1.1,
+            max_tokens=4096,
             stop_token_ids=[],
         )
 
