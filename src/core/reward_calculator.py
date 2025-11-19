@@ -271,7 +271,7 @@ class RewardCalculator:
             动作类型字符串(如 "click", "type", "scroll" 等),如果提取失败则返回None
         """
         # 从代码块中提取动作
-        pattern = r'```((.|\n)*?)```'
+        pattern = r'<action>((.|\n)*?)</action>'
         match = re.search(pattern, response)
         if not match:
             return None

@@ -31,7 +31,7 @@ class Rewarder:
             if not ACCELERATE_AVAILABLE:
                 raise ImportError("accelerate 库未安装，无法使用多卡模式。请运行: pip install accelerate")
             self.accelerator = Accelerator()
-        
+
         tokenizer, model, processor, context_len = self._load_vlm_model(model_path)
         self.model = model
         self.tokenizer = tokenizer
@@ -74,10 +74,12 @@ class Rewarder:
         """计算格式奖励"""
         return format_reward_cal(response)
 
-    def reward(self,response,image_path,visualize = False,visual_save = None):
+    def reward(self,response,image_path,visualize = False,visual_save = None,visualize_per_token = False,visualize_obs_indices = None):
         """
         response: 模型输出的text tokens
         image: 对应的环境的截图
+        visualize_per_token: 是否生成每个token的可视化（包括热力图、柱状图和交互式HTML）
+        visualize_obs_indices: 指定要可视化的观察序列索引列表，如 [0, 2, 5]。如果为 None，则可视化所有观察序列
         """
         # 如果使用多进程且不是主进程，则参与计算但不返回结果
         if self.use_accelerate and not self.accelerator.is_main_process:
@@ -111,14 +113,14 @@ class Rewarder:
         outputs['aggregate_attn'] = self._aggregate_attentions(outputs)
 
         # 4. 计算reward
-        shift_reward,zoom_reward = self._compute_reward(obs_seq,processed_input,outputs,visualize,visual_save)
+        shift_reward,zoom_reward = self._compute_reward(obs_seq,processed_input,outputs,visualize,visual_save,visualize_per_token,visualize_obs_indices)
         # query peak GPU memory
         if torch.cuda.is_available() and device.type == 'cuda':
             peak_bytes = torch.cuda.max_memory_allocated(device)
             peak_mib = peak_bytes / (1024 ** 2)
             print(f"[Rewarder] Peak GPU memory during reward(): {peak_mib:.1f} MiB")
 
-        return shift_reward,zoom_reward,a_format_reward,s_format_reward
+        return shift_reward,zoom_reward,format_reward
 
     def _participate_in_computation(self, response, image_path):
         """非主进程参与计算但不返回结果"""
@@ -300,8 +302,11 @@ class Rewarder:
             obs_attn_seq.append(mean_attn.cpu())
         return obs_attn_seq
 
-    def _compute_reward(self,obs_seq,processed_input,outputs,visualize,visual_save):
-        """根据观察序列和这些text tokens关于image tokens的attention计算reward"""
+    def _compute_reward(self,obs_seq,processed_input,outputs,visualize,visual_save,visualize_per_token=False,visualize_obs_indices=None):
+        """根据观察序列和这些text tokens关于image tokens的attention计算reward
+
+        visualize_obs_indices: 指定要可视化的观察序列索引列表，如果为 None 则可视化所有
+        """
 
         attn = outputs['aggregate_attn']
         num_patches = outputs['num_patches']
@@ -373,6 +378,26 @@ class Rewarder:
                         r = shift_reward
                         cv2.imwrite(f'{visual_save}/{tag}_{index}_{r}.png', heated_image)
 
+            # 是否需要per-token可视化
+            if visualize_per_token and visual_save:
+                # 检查是否需要可视化当前观察序列
+                if visualize_obs_indices is None or index in visualize_obs_indices:
+                    st, ed, slice_ids = obs_range_seq[index]
+                    self.visualize_per_token_attention(
+                        obs_attn=obs_attn[st:ed],
+                        token_ids=slice_ids,
+                        token_start_idx=st,  # 添加起始索引
+                        vision_start=vision_start,
+                        vision_end=vision_end,
+                        tag=tag,
+                        obs_idx=index,
+                        visual_save=visual_save,
+                        outputs=outputs,
+                        full_attn=attn,
+                        obs_range_seq=obs_range_seq,  # 传入所有观察序列的范围
+                        full_input_ids=full_input_ids  # 新增：传入完整的input_ids
+                    )
+
 
         # log平缓
         shift_rewards,zoom_rewards = self._log_smooth(shift_rewards,zoom_rewards)
@@ -438,6 +463,550 @@ class Rewarder:
         union = x.sum()
 
         return intersect / union
+
+    def visualize_per_token_attention(self, obs_attn, token_ids, token_start_idx, vision_start, vision_end,
+                                       tag, obs_idx, visual_save, outputs, full_attn, obs_range_seq, full_input_ids):
+        """
+        为观察序列中的每个token生成详细的attention可视化
+
+        参数:
+            obs_attn: [N_tokens, N_image_patches] 当前观察序列的attention矩阵
+            token_ids: 当前观察序列的token IDs列表
+            token_start_idx: 当前观察序列在full_input_ids中的起始索引
+            vision_start: 图片tokens的起始位置
+            vision_end: 图片tokens的结束位置
+            tag: 动作标签 ('shift' 或 'zoom in')
+            obs_idx: 观察序列索引
+            visual_save: 可视化保存路径
+            outputs: 模型输出字典
+            full_attn: [N, N] 完整的attention矩阵
+            obs_range_seq: 所有观察序列的token范围列表
+            full_input_ids: 完整的观察序列token IDs（包括所有观察序列和gap）
+        """
+        import matplotlib.pyplot as plt
+
+        if not os.path.exists(visual_save):
+            os.makedirs(visual_save)
+
+        # 为每个token生成可视化
+        token_data = []
+        for token_idx in range(len(token_ids)):
+            token_id = token_ids[token_idx]
+            token_text = self.tokenizer.decode([token_id])
+
+            # 获取当前token在完整attn中的位置（使用正确的全局索引）
+            global_token_idx = vision_end + 1 + token_start_idx + token_idx
+
+            # 提取当前token对所有上下文的attention
+            # full_attn[global_token_idx, :] 包含对所有token的attention
+            token_full_attn = full_attn[global_token_idx, :global_token_idx+1]  # 只看之前的token
+
+            # 分离图片和文本部分
+            token_attn_to_image = token_full_attn[vision_start:vision_end]  # 对图片的attention
+
+            # 对文本的attention：只包含观察序列的文本（不含系统提示）
+            # vision_end+1 到当前token之前的所有观察文本
+            token_attn_to_text = token_full_attn[vision_end+1:-1]
+
+            # 收集所有前文观察token的文本（用于可视化x轴）
+            # 直接从 full_input_ids 中提取从0到当前token之前的所有tokens（包括gap）
+            preceding_token_texts = []
+
+            # 计算需要的总token数：当前观察序列的起始位置 + 当前token在该序列中的偏移
+            total_preceding_count = token_start_idx + token_idx
+
+            # 从 full_input_ids 中提取所有前文tokens
+            for i in range(total_preceding_count):
+                tid = full_input_ids[i]
+                preceding_token_texts.append(self.tokenizer.decode([tid]))
+
+            token_data.append({
+                'token_idx': token_idx,
+                'token_id': token_id,
+                'token_text': token_text,
+                'attn_to_image': token_attn_to_image.cpu().numpy(),
+                'attn_to_text': token_attn_to_text.cpu().numpy() if len(token_attn_to_text) > 0 else None,
+                'full_attn': token_full_attn.cpu().numpy(),
+                'preceding_token_texts': preceding_token_texts  # 新增：前文token的文本
+            })
+
+            # 生成矩阵热力图
+            # self._generate_token_heatmap(
+            #     token_data[-1],
+            #     f'{visual_save}/{tag}_{obs_idx}_token_{token_idx}_{token_text[:20]}_heatmap.png'
+            # )
+
+            # 生成柱状图
+            self._generate_token_barchart(
+                token_data[-1],
+                f'{visual_save}/{tag}_{obs_idx}_token_{token_idx}_{token_text[:20]}_bar.png',
+                outputs
+            )
+
+            # 生成HTML表格可视化（更清晰地展示每个前文token的attention）
+            self._generate_token_text_attention_html(
+                token_data[-1],
+                f'{visual_save}/{tag}_{obs_idx}_token_{token_idx}_{token_text[:20]}_text_attn.html'
+            )
+
+        # 生成交互式HTML总览
+        # self._generate_interactive_html(
+        #     token_data,
+        #     tag,
+        #     obs_idx,
+        #     f'{visual_save}/{tag}_{obs_idx}_per_token_overview.html'
+        # )
+
+    def _generate_token_heatmap(self, token_data, save_path):
+        """
+        生成单个token的attention矩阵热力图
+
+        参数:
+            token_data: 包含token信息和attention数据的字典
+            save_path: 保存路径
+        """
+        import matplotlib.pyplot as plt
+        try:
+            import seaborn as sns
+            use_seaborn = True
+        except ImportError:
+            use_seaborn = False
+
+        fig, ax = plt.subplots(figsize=(12, 2))
+
+        # 将full_attn重塑为2D以便可视化
+        attn_2d = token_data['full_attn'].reshape(1, -1)
+
+        if use_seaborn:
+            import seaborn as sns
+            sns.heatmap(attn_2d, ax=ax, cmap='viridis', cbar=True,
+                        xticklabels=False, yticklabels=False)
+        else:
+            # 使用纯 matplotlib
+            im = ax.imshow(attn_2d, cmap='viridis', aspect='auto')
+            plt.colorbar(im, ax=ax)
+            ax.set_xticks([])
+            ax.set_yticks([])
+
+        ax.set_title(f"Token: '{token_data['token_text']}' - Attention Distribution")
+        ax.set_xlabel('Context Position')
+        ax.set_ylabel('Current Token')
+
+        plt.tight_layout()
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        plt.close()
+
+    def _generate_token_barchart(self, token_data, save_path, outputs):
+        """
+        生成单个token的attention柱状图，区分图片和文本部分
+
+        参数:
+            token_data: 包含token信息和attention数据的字典
+            save_path: 保存路径
+            outputs: 模型输出字典（包含图片网格信息）
+        """
+        import matplotlib.pyplot as plt
+
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 5))
+
+        # 左图：对图片patches的attention
+        attn_to_image = token_data['attn_to_image']
+        ax1.bar(range(len(attn_to_image)), attn_to_image, color='steelblue', alpha=0.7)
+        ax1.set_title(f"Token '{token_data['token_text']}' - Attention to Image Patches")
+        ax1.set_xlabel('Image Patch Index')
+        ax1.set_ylabel('Attention Weight')
+        ax1.grid(axis='y', alpha=0.3)
+
+        # 右图：对文本tokens的attention
+        if token_data['attn_to_text'] is not None and len(token_data['attn_to_text']) > 0:
+            attn_to_text = token_data['attn_to_text']
+            token_texts = token_data['preceding_token_texts']
+
+            # 确保长度匹配（调试和修正）
+            if len(token_texts) != len(attn_to_text):
+                print(f"[Warning] Length mismatch for token '{token_data['token_text']}' (idx={token_data['token_idx']})")
+                print(f"  attn_to_text length: {len(attn_to_text)}")
+                print(f"  token_texts length: {len(token_texts)}")
+
+                # 截断到较短的长度
+                min_len = min(len(token_texts), len(attn_to_text))
+                token_texts = token_texts[:min_len]
+                attn_to_text = attn_to_text[:min_len]
+                print(f"  Truncated to length: {min_len}")
+
+            # 使用柱状图，x轴为token文本
+            x_positions = range(len(attn_to_text))
+            ax2.bar(x_positions, attn_to_text, color='coral', alpha=0.7)
+            ax2.set_xticks(x_positions)
+            ax2.set_xticklabels(token_texts, rotation=45, ha='right', fontsize=8)
+            ax2.set_title(f"Token '{token_data['token_text']}' - Attention to Preceding Tokens")
+            ax2.set_xlabel('Preceding Token Text')
+            ax2.set_ylabel('Attention Weight')
+            ax2.grid(axis='y', alpha=0.3)
+        else:
+            ax2.text(0.5, 0.5, 'No preceding text tokens',
+                    ha='center', va='center', transform=ax2.transAxes)
+            ax2.set_title('Attention to Preceding Tokens')
+
+        plt.tight_layout()
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        plt.close()
+
+    def _generate_token_text_attention_html(self, token_data, save_path):
+        """
+        生成单个token对前文tokens的attention的HTML表格可视化
+
+        特点：
+        - 每行显示一个前文token和attention值
+        - 根据attention值大小使用颜色编码
+        - 包含水平柱状条形图
+        - 支持按attention值排序
+
+        参数:
+            token_data: 包含token信息和attention数据的字典
+            save_path: HTML文件保存路径
+        """
+        import numpy as np
+
+        # 获取数据
+        current_token = token_data['token_text']
+        token_idx = token_data['token_idx']
+        attn_to_text = token_data['attn_to_text']
+        preceding_token_texts = token_data['preceding_token_texts']
+
+        # 如果没有前文文本，返回空文件
+        if attn_to_text is None or len(attn_to_text) == 0:
+            html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Token '{current_token}' - No Preceding Tokens</title>
+</head>
+<body>
+    <h2>Token '{current_token}' (Index: {token_idx})</h2>
+    <p>No preceding text tokens available.</p>
+</body>
+</html>
+"""
+            with open(save_path, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            return
+
+        # 确保长度匹配
+        if len(preceding_token_texts) != len(attn_to_text):
+            min_len = min(len(preceding_token_texts), len(attn_to_text))
+            preceding_token_texts = preceding_token_texts[:min_len]
+            attn_to_text = attn_to_text[:min_len]
+
+        # 归一化attention值到0-1范围用于可视化
+        attn_values = np.array(attn_to_text)
+        max_attn = attn_values.max() if attn_values.max() > 0 else 1.0
+        normalized_attn = attn_values / max_attn
+
+        # 生成表格行
+        table_rows = []
+        for i, (token_text, attn_val, norm_attn) in enumerate(zip(preceding_token_texts, attn_values, normalized_attn)):
+            # 根据attention值决定背景颜色
+            if norm_attn > 0.7:
+                row_class = 'high-attn'
+            elif norm_attn > 0.4:
+                row_class = 'medium-attn'
+            else:
+                row_class = 'low-attn'
+
+            # 转义HTML特殊字符
+            token_display = token_text.replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
+            if token_display.strip() == '':
+                token_display = '[SPACE/NEWLINE]'
+
+            # 柱状图宽度（最大500px）
+            bar_width = int(norm_attn * 500)
+
+            row_html = f"""
+                <tr class="{row_class}" data-attn="{attn_val:.6f}">
+                    <td>{i}</td>
+                    <td class="token-cell">{token_display}</td>
+                    <td class="attn-value">{attn_val:.6f}</td>
+                    <td class="bar-cell">
+                        <div class="bar" style="width: {bar_width}px;"></div>
+                    </td>
+                </tr>
+"""
+            table_rows.append(row_html)
+
+        # 构建完整HTML
+        html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Token '{current_token}' - Attention to Preceding Tokens</title>
+    <style>
+        body {{
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }}
+        .container {{
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }}
+        h2 {{
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }}
+        .info {{
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196F3;
+        }}
+        table {{
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }}
+        th, td {{
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }}
+        th {{
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+        }}
+        th:hover {{
+            background-color: #45a049;
+        }}
+        .token-cell {{
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            white-space: pre;
+        }}
+        .attn-value {{
+            font-family: 'Courier New', monospace;
+            text-align: right;
+        }}
+        .bar-cell {{
+            min-width: 500px;
+        }}
+        .bar {{
+            height: 20px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }}
+        .high-attn {{
+            background-color: rgba(255, 100, 100, 0.2);
+        }}
+        .medium-attn {{
+            background-color: rgba(255, 200, 100, 0.2);
+        }}
+        .low-attn {{
+            background-color: rgba(200, 200, 200, 0.1);
+        }}
+        tr:hover {{
+            background-color: rgba(33, 150, 243, 0.1) !important;
+        }}
+        .controls {{
+            margin: 15px 0;
+        }}
+        button {{
+            padding: 8px 16px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }}
+        button:hover {{
+            background-color: #45a049;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Token: '{current_token}' (Index: {token_idx})</h2>
+        <div class="info">
+            <strong>Total Preceding Tokens:</strong> {len(attn_values)} |
+            <strong>Max Attention:</strong> {attn_values.max():.6f} |
+            <strong>Mean Attention:</strong> {attn_values.mean():.6f}
+        </div>
+
+        <div class="controls">
+            <button onclick="sortTable(2, false)">Sort by Attention (Desc)</button>
+            <button onclick="sortTable(0, true)">Sort by Index (Asc)</button>
+        </div>
+
+        <table id="attnTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0, true)">Index ▲</th>
+                    <th onclick="sortTable(1, true)">Token</th>
+                    <th onclick="sortTable(2, false)">Attention ▼</th>
+                    <th>Visualization</th>
+                </tr>
+            </thead>
+            <tbody>
+{''.join(table_rows)}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let sortOrder = {{}};
+
+        function sortTable(columnIndex, ascending = true) {{
+            const table = document.getElementById('attnTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Toggle sort order if clicking same column
+            if (sortOrder[columnIndex] !== undefined) {{
+                ascending = !sortOrder[columnIndex];
+            }}
+            sortOrder = {{}};
+            sortOrder[columnIndex] = ascending;
+
+            rows.sort((a, b) => {{
+                let aVal, bVal;
+
+                if (columnIndex === 0) {{
+                    // Index column
+                    aVal = parseInt(a.cells[0].textContent);
+                    bVal = parseInt(b.cells[0].textContent);
+                }} else if (columnIndex === 2) {{
+                    // Attention column
+                    aVal = parseFloat(a.dataset.attn);
+                    bVal = parseFloat(b.dataset.attn);
+                }} else {{
+                    // Token column
+                    aVal = a.cells[1].textContent;
+                    bVal = b.cells[1].textContent;
+                }}
+
+                if (aVal < bVal) return ascending ? -1 : 1;
+                if (aVal > bVal) return ascending ? 1 : -1;
+                return 0;
+            }});
+
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }}
+    </script>
+</body>
+</html>
+"""
+
+        with open(save_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+    def _generate_interactive_html(self, token_data_list, tag, obs_idx, save_path):
+        """
+        生成交互式HTML可视化，展示整段观察的所有token
+
+        参数:
+            token_data_list: 包含所有token数据的列表
+            tag: 动作标签
+            obs_idx: 观察序列索引
+            save_path: HTML保存路径
+        """
+        import json
+
+        # 准备数据
+        tokens = [d['token_text'] for d in token_data_list]
+
+        # 构建HTML
+        html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{tag} - Observation {obs_idx} - Per-Token Attention</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }}
+        h1 {{
+            color: #333;
+        }}
+        .container {{
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }}
+        #heatmap {{
+            width: 100%;
+            height: 600px;
+        }}
+        .info {{
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196F3;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Per-Token Attention Visualization</h1>
+        <div class="info">
+            <strong>Tag:</strong> {tag} |
+            <strong>Observation Index:</strong> {obs_idx} |
+            <strong>Total Tokens:</strong> {len(tokens)}
+        </div>
+        <div id="heatmap"></div>
+    </div>
+
+    <script>
+        var tokens = {json.dumps(tokens)};
+        var attentions = {json.dumps([d['full_attn'].tolist() for d in token_data_list])};
+
+        // 创建热力图数据
+        var data = [{{
+            z: attentions,
+            x: Array.from({{length: Math.max(...attentions.map(a => a.length))}}, (_, i) => i),
+            y: tokens,
+            type: 'heatmap',
+            colorscale: 'Viridis',
+            hoverongaps: false,
+            hovertemplate: 'Token: %{{y}}<br>Context Position: %{{x}}<br>Attention: %{{z:.4f}}<extra></extra>'
+        }}];
+
+        var layout = {{
+            title: 'Token-wise Attention Distribution',
+            xaxis: {{
+                title: 'Context Position (0 = start)',
+                side: 'bottom'
+            }},
+            yaxis: {{
+                title: 'Token',
+                autorange: 'reversed'
+            }},
+            height: 600
+        }};
+
+        Plotly.newPlot('heatmap', data, layout, {{responsive: true}});
+    </script>
+</body>
+</html>
+"""
+
+        with open(save_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
 
 class ChunkRewarder(Rewarder):
     def __init__(self, chunk_size, *args, **kwargs):
@@ -564,6 +1133,7 @@ class ChunkRewarder(Rewarder):
             torch.cuda.reset_peak_memory_stats(device)
 
         format_reward = self._compute_format_reward(response)
+
 
         # 1. 从response中提取标签,组装新的input_text,并提取出观察序列
         processed_input,obs_seq = self._get_processed_input(response)
@@ -1048,7 +1618,22 @@ if __name__ == "__main__":
     
     # 检查命令行参数以决定是否使用 accelerate
     use_accelerate = False
-    
+    image_path = "/data/wangzhenchuan/Projects/LIFT/data/debug/visualize_guitar.png"
+    e_text = """Let's break down the task and focused on the page interactions.
+<zoom in>
+The user's objective is to find the email of the seller of the guitar in the red case on the current page. The screenshot currently displays a list of musical instruments, and there are specific listings to consider, particularly focusing on guitars.
+
+Observations:
+- The current page is listing music instruments, including guitars.
+- The listing highlighted in red appears to be for a "2021 GIBSON SG TRIBUTE with GIBSON hard case."
+- To find the email of the seller, we need to click on the relevant listing to view more details, including the seller's contact information.
+
+The next step is to specifically locate the listing for the "2021 GIBSON SG TRIBUTE with GIBSON hard case." Instead of providing the email directly, it would be necessary to click on the listing to proceed to the seller's contact page. Therefore, any relevant listing must be clicked for detailed information.
+</zoom in>
+
+<action>
+click [32]
+</action>"""
     if use_accelerate:
         print("使用 Accelerate 多卡模式...")
         # 示例：使用不同类型的 rewarder
@@ -1057,364 +1642,13 @@ if __name__ == "__main__":
         rewarder = ContainDisRewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct", use_accelerate=True)
     else:
         print("使用单卡模式...")
-        rewarder = ChunkRewarder(chunk_size=2000,model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
-        # rewarder = Rewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
+        # rewarder = ChunkRewarder(chunk_size=2000,model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
+        rewarder = Rewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
         # rewarder = ContainDisRewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
-    e_text = f"""Let's observe step by step.
-<zoom in>
-The image shows a web page with a list of listings in the 'Rvs + campers' category. The listings are sorted by 'Newly listed.' The current focus is on the title "Rvs + campers," which is clickable to further refine the search.
-</zoom in>
-<shift>
-To narrow down the search to a specific game category, such as the Steam Workshop, the next logical step is to click on the category search bar to input the desired game, allowing the system to filter results accordingly.
-</shift>
-<zoom in>
-The "Rvs + campers" category is visible and should be interacted with to filter the listings appropriately.
-</zoom in>
-<shift>
-Clicking on the 'Rvs + campers' category should allow further refinement of the listings to find the most recently listed item related to RAM.
-</shift>
-<zoom in>
-The observed interface suggests a need to interact with the list of categories or specific listings to filter or refine the search, which will facilitate finding the RAM details.
-</zoom in>
-<shift>
-To achieve the task, we should click on the 'Rvs + campers' category as it is the current focus.
-</shift>
-<zoom in>
-The "Rvs + campers" category is the key focus, and interacting with it should allow further refinement and access to relevant listings.
-</zoom in>
-<shift>
-Click on the 'Rvs + campers' category to filter the listings and refine the search to find the most recently listed item.
-</shift>
-<zoom in>
-To find the most recently listed item, we need to filter the listings to focus on 'Video gaming' instead of 'Rvs + campers.' Clicking on the 'Video gaming' category will refine results accordingly.
-</zoom in>
-<shift>
-Click on the 'Video gaming' category in the refine section to filter the listings.
-</shift>
-<summary>
-Click on the 'Rvs + campers' category to interact with it and verify or refine the filters for the listings.
-```
-click [14]
-```</summary>"""
 
-    bug_text = """Let's observe step by step. First, I will zoom in to the region where keyword and other needed elements are located.
-<zoom in>
-The current page includes:
-- Keyword search box, which can receive a specific search query to refine results.
-- A Category selection dropdown marked by id 6.
-- A Price section denoted by id 8 which includes sliders for price range refinement.
-</zoom in>
-I will need to shift focus to the correct section to set the criteria specific to find a red Toyota within the given price range.
-<shift>
-After identifying the elements on the page, I should:
-1. Click on the Category dropdown (id 6) to explore subcategories.
-2. Click the Price Min. and Max. sliders' area (id 8) to set the price range $3000 to $6000.
-</shift>
-Following these steps:
-1. I need to set the category to 'Cars & Trucks'.
-2. I will then narrow the price range to $3000 to $6000.
-3. After this, I will perform a search.
-
-The next action should be clicking on the 'Cars + Trucks' under "All categories".
-<action>
-```click [39]```
-</action>
-<summary>
-The next steps would be searching the keyword 'Toyota' within the 'Cars + Trucks' category, setting the price range to $3000-$6000, and executing the search. Then, once focusing on the Toyota listings within this range, a link would be clicked to view the page of the cheapest red Toyota. The action performed here is choosing the 'Cars + Trucks' category.
-</summary>
-<tool_call>
-
- addCriterion
-<tool_call>
-
-
-
-
-
-
- addCriterion
-
- addCriterion
-
- addCriterion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-    image_path = "/data/wangzhenchuan/Projects/LIFT/results/55/step_3_obs.png"
-
-    print(rewarder.reward(bug_text, visualize=False, image_path=image_path,
-                          visual_save='/data/wangzhenchuan/Projects/LIFT/visualize_debug_low'))
-    e_text = """Let's observe step-by-step. First, I will zoom in to observe the whole page.
-<zoom in>
-This page can be divided into following sections:
-**Header Section**:
-- Contains "OsClass" logo and navigation links for "My account," "Logout," and "Publish Ad."
-
-**Navigation Bar**:
-- Includes options like "Classifieds" > Furniture.
-
-**Search Filters Area**:
-- Allows users to input search terms, select cities, show only listings with pictures, set price ranges using sliders or text fields.
-
-**Subscribe Box**:
-- Option allowing visitors to subscribe via email notifications about new furniture items matching their criteria; includes an orange box labeled “Subscribe now!”
-
-**Refine Category Options**:
-- Links allow narrowing down searches further: all categories and 'Furniture'.
-
-**Main Content Area – Listings Displayed** :
-- Lists available furniture products including images, titles, prices, locations alongwith brief descriptions below.
-</zoom in>
-According to the observation above, this page already displays products of "Furniture" category and the products are already \
-sorted by dates. To find the most recent blue chair in the "Furniture" category of Washington, D.C. I should zoom in the Main Content Area \
-to see if there is any blue chair.
-<zoom in>
-The "Main Content Area" section of this page displays three furniture items for sale:
-
-### Century Furniture English Roll Arm Sofa
-- **Title:** Century Furniture English Roll Arm Sofa
-- **Price:** $605.00 ($23 less than original)
-- **Location:** Arlington, Virginia / Added: November 16th, 2023
-
-**Description:**
-```
-SAVE UP TO 90%! PRICES UPDATED DAILY!
-Century Furniture English Roll Arm sofa.
-Original Price was $5000 now only at $605.00
-Brand: Century Furniture
-```
-
----
-
-### Highland House Tufted Back Accent Chair
-- **Title:** Highland House Furniture Tufted Back Accent Chair
-- **Price:** $220.00 ($78 off from Original)
-- **Location:** Dale City, Virginia / Added: November 16th, 2023
-
-**Description:**
-```
-SAVE UP TO 90% !PRICES UPDATED DAILY!
-Highland house furniture tufted back accent chair.
-original price :$4500 now it's just:$220.00
-brand high land house furniture
-```
-
----
-
-### NEW Zinus Green Tea QUEEN Memory Foam Mattress
-- **Title:** New Zinus 12 Inch Green Tea Queen Memory Foam Mattress
-- **Price:** $199.00 ($401 discount compared to retail value)
-
-- **Location:** Borough of East Washington, Pennsylvania / Added: November 16th, 2023
-
-**Description:**
-```
-Zinus 12 Inch green tea queen memory foam mattress certipur-us certified bed-in-a-box pressure relieving queen.
-This bed retails for $600 get it for one-third its price of $199 !
-Also have bedframes available at steep discounts if you want to save...
-```
-</zoom in>
-According to the observation above, only Highland House Tufted Back Accent Chair is a chair in Washington, D.C., I need to zoom in its thumbnail image \
-to see if it's blue.
-<zoom in>
-Focusing on the thumbnail for the Highland House Tufted Back Accent Chair, the chair’s upholstery is a \
-light beige/cream color with deep button tufting—not blue.
-</zoom in>
-According to the observation above, none of the products in this page is the most recent blue chair in Washington, D.C. \
-So I need to shift to Search Filters Area to narrow down the products displayed to products in Washington, D.C.
-<shift>
-We move our focus to the **Search Filters Area** on the left:
-The Search Filters Area is located on the left side of the webpage and contains several options to refine search results:
-
-1. **Your search**: A text box where users can enter specific keywords or phrases related to their furniture needs.
-2. **City**: Another input field for specifying the city in which they want to find listings, allowing searches within particular geographic areas.
-3. **Show only listings with pictures**: An option that filters out ads without images if selected by checking this checkbox (not checked here).
-4. **Price Min./Max.:**
-   - Two fields labeled "Min." and "Max.", enabling price range filtering so you specify your budget limits when searching.
-
-5. **Apply button:** This blue rectangular button allows applying any changes made through these filter settings back into the main listing area above it after entering values like prices etc., making sure all criteria match before displaying relevant items accordingly based upon those inputs provided earlier via respective dropdown menus/checkboxes available under each section mentioned previously herein above.
-</shift>
-According to the observation above, I can input "Washington" in **City** to narrow down displayed products. Next, I need \
-to zoom in to check the id of **City**.
-<zoom in>
-The id of **City** is 7
-</zoom in>
-
-<summary>
-Observations so far:
-1. The page is divided into a few sections.
-2. The Main Content displays three items added November 16, 2023:
-   - Century Furniture English Roll Arm Sofa (Arlington, VA)
-   - Highland House Tufted Back Accent Chair (Dale City, VA)
-   - Zinus Green Tea Queen Mattress (East Washington, PA)
-3. Zooming the Highland House Accent Chair thumbnail shows it is beige, not blue.
-4. No blue chair in Washington, D.C. appears on this page, so we need to use the Search Filters Area to narrow results by city.
-
-So the next action I will perform is ```type [7] [Washington] [0]```
-</summary>"""
-    image_path = "/data/wangzhenchuan/Projects/LIFT/data/example/example.png"
-
-    print(rewarder.reward(e_text,visualize=False,image_path=image_path, visual_save = '/data/wangzhenchuan/Projects/LIFT/visualize_debug'))
-
-    # A = torch.tensor(
-    #     [[1, 0, 0, 0],
-    #      [0, 0, 1, 1],
-    #      [0, 1, 1, 1],
-    #      [0, 0, 0, 0]])
-    # A = A.max()- A
-    # A = A / A.sum()
-    # B = torch.tensor(
-    #     [[0, 1, 1, 1],
-    #      [1, 1, 0, 0],
-    #      [1, 0, 0, 0],
-    #      [1, 0, 0, 0]])
-    # B = B / B.sum()
-    #
-    # ratio_score = 2*rewarder.instruction_func(rewarder._ratio_score(A,B))
-    # contain_score = rewarder._containing_score(A,B)
-    # reward = contain_score * ratio_score
-    # print(reward)
+    print(rewarder.reward(e_text,
+                          image_path=image_path,
+                          visualize=True,
+                          visual_save='/data/wangzhenchuan/Projects/LIFT/visualize_attention_guitar_good',
+                          visualize_per_token=True,
+                          visualize_obs_indices = [0]))

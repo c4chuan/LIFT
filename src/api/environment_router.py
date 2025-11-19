@@ -4,7 +4,7 @@
 提供FastAPI端点，将API层和业务逻辑分离
 """
 import asyncio
-from typing import List
+from typing import List,Dict,Any
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel
 
@@ -13,11 +13,12 @@ from src.core.orchestrator import EnvironmentOrchestrator
 
 class ResponseList(BaseModel):
     """响应列表模型"""
-    responses: List[str]
+    responses: List[Dict[Any,Any]]
 
 class ResponseWithReward(BaseModel):
     response: str
     reward_sum: float
+    task_id: int
 
 def create_environment_router(orchestrator: EnvironmentOrchestrator) -> APIRouter:
     """

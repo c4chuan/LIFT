@@ -22,6 +22,7 @@ from visualwebarena.src.envs.actions import create_none_action, create_id_based_
 class ResponseWithReward(BaseModel):
     response: str
     reward_sum: float
+    task_id: int
 
 
 class EnvironmentOrchestrator:
@@ -378,7 +379,8 @@ class EnvironmentOrchestrator:
 
         # 更新任务信息
         tasks_to_produce = []
-        for task, response, action in zip(processing_tasks, responses, actions):
+        for response, action in zip(responses, actions):
+            task = self.find_task_by_task_id(response.task_id, processing_tasks)
             task.steps += 1
 
             # 提取summary
@@ -427,7 +429,7 @@ class EnvironmentOrchestrator:
 
         return messages
 
-    async def get_valid_action_rewards(self, responses: List[str]) -> List[float]:
+    async def get_valid_action_rewards(self, responses: List[Dict[Any,Any]]) -> List[float]:
         """
         计算动作奖励
 
@@ -439,6 +441,11 @@ class EnvironmentOrchestrator:
         """
         processing_tasks = self.task_pool.get_tasks_by_state(TaskState.PROCESSING)
 
+        # 判断送来获取奖励的任务与正在处理中的任务能够对齐
+        print([t.task_id for t in processing_tasks])
+        print([r['task_id'] for r in responses])
+        assert all(task_id in [t.task_id for t in processing_tasks] for task_id in [r['task_id'] for r in responses] )
+
         if len(processing_tasks) == 0:
             print("警告: 没有处理中的任务")
             return []
@@ -447,16 +454,30 @@ class EnvironmentOrchestrator:
         batch_size = len(responses) // len(processing_tasks)
 
         rewards = []
-        for i, task in enumerate(processing_tasks):
-            task_responses = responses[i * batch_size:(i + 1) * batch_size]
-            task_rewards = await self.reward_calculator.calculate_batch_rewards(
-                task_responses,
-                [task] * len(task_responses)
+        for response in responses:
+            task_id = response['task_id']
+            task = self.find_task_by_task_id(task_id,processing_tasks)
+            reward = await self.reward_calculator.calculate_single_reward(
+                response['response'],
+                task
             )
-            rewards.extend(task_rewards)
+            rewards.append(reward)
 
         return [0.3*reward for reward in rewards]
 
+    def collect_by_task_id(self, responses: List[Dict[Any,Any]],task_id: int) -> List[Dict[str, Any]]:
+        """根据task_id找到对应的response"""
+        return_list = []
+        for r in responses:
+            if r['task_id'] == task_id:
+                return_list.append(r['response'])
+        return return_list
+
+    def find_task_by_task_id(self, task_id: int,processing_tasks: List[Any]) -> Any:
+        """根据task_id找到对应的response"""
+        for t in processing_tasks:
+            if task_id == t.task_id:
+                return t
     def refresh_env(self):
         """刷新环境"""
         refresh_env_login()

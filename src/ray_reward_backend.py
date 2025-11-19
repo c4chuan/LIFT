@@ -16,11 +16,6 @@ BASE_URL = "http://192.168.1.6:7333"
 #     name = "250801"
 #
 # )
-swanlab.init(
-    # 设置项目名
-    project="reward-record",
-    experiment_name = "250811"
-)
 settings = {
     "initial_steps": 200
 }
@@ -51,6 +46,7 @@ class RewarderActor:
 class RewardRequest(BaseModel):
     response: str
     image_path: str
+    task_id: int
     visualize: Optional[bool] = False
     visual_save: Optional[str] = None
 
@@ -101,9 +97,9 @@ def get_rewards(batch: BatchRequest):
     # torch清除缓存
     torch.cuda.empty_cache()
     remote_paths = [req.image_path for req in batch.requests]
-    responses = [req.response for req in batch.requests]
+    responses_with_ids = [{"response":req.response,"task_id":req.task_id} for req in batch.requests]
 
-    request_response = requests.post(url=f"{BASE_URL}/get_valid_action_rewards", json={"responses":responses}).json()
+    request_response = requests.post(url=f"{BASE_URL}/get_valid_action_rewards", json={"responses":responses_with_ids}).json()
     valid_action_rewards = request_response['rewards']
     # valid_action_rewards = [0.0 for _ in responses]
 

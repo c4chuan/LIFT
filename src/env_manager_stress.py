@@ -104,7 +104,7 @@ Observations so far:
 Action: Click the 'Video gaming' option in column C to change from the current topic.
 </summary>
 <action>
-stop [26]
+stop [http://localhost:9980/index.php?page=item&id=40404 and http://localhost:9980/index.php?page=item&id=38125]
 </action>
 """
 
@@ -121,7 +121,7 @@ stop [26]
         }
         reward_responses = [response_model for _ in range(num)]
         images = ["/data/wangzhenchuan/Projects/LIFT/src/0/step_0_obs.png" for i in range(num)]
-        test_get_valid_action_rewards([t_response for _ in range(num)])
+        test_get_valid_action_rewards([{"response": t_response,"task_id": 7} for _ in range(4)])
         test_feed_responses(reward_responses)
         time.sleep(5)
         # if ti%3 == 0:

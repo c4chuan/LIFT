@@ -19,11 +19,11 @@ from src.utils.data_tools import dataset_construct
 # ============ 配置部分 ============
 initial_configs = Box({
     'max_num_envs': 8,
-    'initial_refresh_env': False,
+    'initial_refresh_env': True,
     'cache_dir': './.auth',
     'env_name': 'classifieds',
     'results_dir': '/data/wangzhenchuan/Projects/LIFT/results',
-    'max_task_steps': 4,
+    'max_task_steps': 10,
     'scp_version': 'cmd',
     'type': 'remote',
     'target_server': '192.168.1.5',

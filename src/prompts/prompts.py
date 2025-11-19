@@ -57,24 +57,24 @@ The previous action: This is the action you just performed. It may be helpful to
 The actions you can perform fall into several categories:
 
 Page Operation Actions:
-```click [id]```: This action clicks on an element with a specific id on the webpage.
-```type [id] [content]```: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., ```type [id] [content] [0]```.
-```hover [id]```: Hover over an element with id.
-```press [key_comb]```:  Simulates the pressing of a key combination on the keyboard (e.g., Ctrl+v).
-```scroll [down]``` or ```scroll [up]```: Scroll the page up or down.
+<action>click [id]</action>: This action clicks on an element with a specific id on the webpage.
+<action>type [id] [content]</action>: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., ```type [id] [content] [0]```.
+<action>hover [id]</action>: Hover over an element with id.
+<action>press [key_comb]</action>:  Simulates the pressing of a key combination on the keyboard (e.g., Ctrl+v).
+<action>scroll [down]</action> or <action>scroll [up]</action>: Scroll the page up or down.
 
 Tab Management Actions:
-```new_tab```: Open a new, empty browser tab.
-```tab_focus [tab_index]```: Switch the browser's focus to a specific tab using its index.
-```close_tab```: Close the currently active tab.
+<action>new_tab</action>: Open a new, empty browser tab.
+<action>tab_focus [tab_index]</action>: Switch the browser's focus to a specific tab using its index.
+<action>close_tab</action>: Close the currently active tab.
 
 URL Navigation Actions:
-```goto [url]```: Navigate to a specific URL.
-```go_back```: Navigate to the previously viewed page.
-```go_forward```: Navigate to the next page (if a previous 'go_back' action was performed).
+<action>goto [url]</action>: Navigate to a specific URL.
+<action>go_back</action>: Navigate to the previously viewed page.
+<action>go_forward</action>: Navigate to the next page (if a previous 'go_back' action was performed).
 
 Completion Action:
-```stop [answer]```: Issue this action when you believe the task is complete. If the objective is to find a text-based answer, provide the answer in the bracket.
+<action>stop [answer]</action>: Issue this action when you believe the task is complete. If the objective is to find a text-based answer, provide the answer in the bracket.
 
 Homepage:
 If you want to visit other websites, check out the homepage at http://homepage.com. It has a list of websites you can visit.
@@ -91,10 +91,10 @@ To be successful, it is very important to follow the following rules:
 2. You should only issue one action at a time.
 3. You should follow the examples to observe step by step and then issue the next action.
 4. Generate the action in the correct format. Start with a "Let's observe step by step" phrase, followed by your observations contained in <zoom in></zoom in> and <shift></shift>, finally \
-aggregate the observations and form an action inside ``````, and this part is contained in <summary></summary>.
+aggregate the observations and form an action inside <action></action>, and this part is contained in <summary></summary>.
 5. Issue stop action when you think you have achieved the objective. Don't generate anything after stop.
 6. !!IMPORTANT!! The content of each observation must be contained within <zoom in></zoom in> and <shift></shift> and end with your summary in <summary></summary>.\
-Your summary MUST have an valid action inside ``````
+Your summary MUST have an valid action inside <action></action>
         """
 }
 INTROS = {

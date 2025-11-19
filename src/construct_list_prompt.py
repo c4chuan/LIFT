@@ -24,8 +24,8 @@ if __name__ == "__main__":
                  "agent_intro": INTROS['LIFT'],
                  "intro_w_reflections": INTROS['LIFT'],
                  "intro_wo_icl": INTROS['LIFT'],
-                 "init_template": "URL: {url}\nOBJECTIVE: {objective}\nPREVIOUS ACTION: {previous_action}",
-                 "template": "URL: {url}\nPREVIOUS ACTION: {previous_action}",
+                 "init_template": "OBSERVATION:{observation}\n URL: {url}\nOBJECTIVE: {objective}\nPREVIOUS ACTION: {previous_action}",
+                 "template": "OBSERVATION:{observation}\n URL: {url}\nPREVIOUS ACTION: {previous_action}",
                  "meta_data": ref_json['meta_data'], 'examples': get_examples(), }
     json.dump(lift_json, open(save_path, 'w'), indent=4)
 
