@@ -1,0 +1,120 @@
+# 轨迹推理填充系统配置文件
+
+# 推理生成器配置
+reasoning:
+  # 选择推理生成模型: "qwen" 或 "gpt4o"
+  generator: "gpt4o"
+
+
+# Qwen API 配置
+qwen:
+  # DashScope API Key（也可以通过环境变量 DASHSCOPE_API_KEY 设置）
+  api_key: "sk-667dbe0bc8f74a0ba832a2b0611f2d08"
+
+  # 模型名称
+  # 可选: qwen-vl-plus, qwen-vl-max
+  model_name: "qwen-vl-max"
+
+  # 最大重试次数
+  max_retries: 3
+
+  # 重试延迟（秒）
+  retry_delay: 2.0
+
+  # 请求超时时间（秒）
+  timeout: 60
+
+
+# GPT-4o Feedback Configuration (for error analysis)
+gpt4o:
+  # OpenAI API Key (configure your key here)
+  api_key: "sk-QD6JetjsxOxP38baqYZoQL3HTxbuRUAAozC68QM0Aw1JpOrN"
+
+  # OpenAI Base URL (configure your base URL here)
+  base_url: "https://xiaoai.plus/v1"
+
+  # Model name
+  model_name: "gpt-4o"
+
+  # Enable GPT-4o feedback (set to false to disable)
+  enabled: true
+
+  # Maximum retry attempts
+  max_retries: 3
+
+  # Request timeout (seconds)
+  timeout: 60
+
+  # Include screenshot in feedback (true = higher cost but better analysis)
+  include_screenshot: true
+
+
+# 路径配置
+paths:
+  # 输入目录（原始标注轨迹）
+  input_dir: "data/annotate/trajectories"
+
+  # 输出目录（填充推理后的轨迹）
+  output_dir: "data/annotate_with_reasoning"
+
+  # 进度文件路径
+  progress_file: "data/annotate_with_reasoning/progress.json"
+
+
+# Prompt 配置
+prompt:
+  # Prompt 风格: LIFT 或 ORIGINAL
+  style: "LIFT"
+
+
+# 处理配置
+processing:
+  # 批量处理大小
+  batch_size: 10
+
+  # 保存进度频率（每处理多少个文件保存一次）
+  save_frequency: 5
+
+  # 环境过滤（null 表示处理所有环境）
+  # 可选: classifieds, reddit, shopping
+  env_filter: null
+
+  # 最大处理数量（null 表示处理所有）
+  max_count: null
+
+  # 跳过已处理的文件
+  skip_if_processed: true
+
+
+# 验证配置
+validation:
+  # 是否启用 action 验证
+  enabled: true
+
+  # 最大重试次数（总共会有 1+max_retry_attempts 次尝试）
+  # 例如：max_retry_attempts=2 表示第1次失败后最多重试2次，总共3次机会
+  max_retry_attempts: 2
+
+  # 是否使用严格匹配（完全精确匹配）
+  strict_matching: true
+
+
+# 提示词增强配置
+prompt_enhancement:
+  # 是否要求全面观察
+  require_comprehensive_observation: true
+
+  # 最少观察步骤数（对应5个Phase）
+  min_observation_steps: 5
+
+  # 是否要求分阶段结构（Phase 1-5）
+  require_phase_structure: true
+
+
+# Prompt 可视化配置
+visualization:
+  # 是否启用 prompt 可视化
+  enable_prompt_visualization: true
+
+  # 可视化文件输出目录
+  output_dir: "data/prompt_visualizations"

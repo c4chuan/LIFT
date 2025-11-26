@@ -9,7 +9,10 @@
       "Bash(Get-ChildItem -Path \"data\" -Recurse)",
       "Bash(Format-Table Name,FullName,Length -AutoSize)",
       "Bash(powershell:*)",
-      "Bash(conda activate:*)"
+      "Bash(conda activate:*)",
+      "Bash(Get-ChildItem -Path \"data/annotate/trajectories\" -Recurse -Filter \"*.pkl.xz\")",
+      "Bash(Select-Object -First 5)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

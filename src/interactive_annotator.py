@@ -41,7 +41,8 @@ class InteractiveAnnotator:
         self.args = args
         self.task_manager = TaskManager(
             annotate_dir=args.annotate_dir,
-            progress_dir=args.progress_dir
+            progress_dir=args.progress_dir,
+            difficulty_filter=getattr(args, 'difficulty', None)
         )
         self.ui = AnnotationUI(
             image_display_method=getattr(args, 'image_display_method', 'auto'),
@@ -407,6 +408,15 @@ def parse_args():
         "--result-dir",
         default="data/annotation_results",
         help="结果输出目录 (默认: data/annotation_results)"
+    )
+
+    # 任务过滤参数
+    parser.add_argument(
+        "--difficulty",
+        nargs='+',
+        choices=["easy", "medium", "hard"],
+        default="easy medium",
+        help="过滤任务难度,可多选 (例如: --difficulty easy medium)"
     )
 
     # 环境参数

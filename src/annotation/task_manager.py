@@ -15,16 +15,19 @@ class TaskManager:
 
     def __init__(self,
                  annotate_dir: str = "data/annotate",
-                 progress_dir: str = "data/annotation_progress"):
+                 progress_dir: str = "data/annotation_progress",
+                 difficulty_filter: Optional[List[str]] = None):
         """
         初始化任务管理器
 
         Args:
             annotate_dir: 标注数据目录
             progress_dir: 进度数据目录
+            difficulty_filter: 难度过滤列表,如 ["easy", "medium"]。None 表示不过滤
         """
         self.annotate_dir = Path(annotate_dir)
         self.progress_dir = Path(progress_dir)
+        self.difficulty_filter = difficulty_filter
 
         # 确保目录存在
         self.progress_dir.mkdir(parents=True, exist_ok=True)
@@ -39,6 +42,7 @@ class TaskManager:
         # 进度文件路径
         self.progress_file = self.progress_dir / "progress.json"
         self.completed_file = self.progress_dir / "completed_tasks.json"
+        self.skipped_file = self.progress_dir / "skipped_tasks.json"
 
         # 加载数据
         self._load_tasks()
@@ -53,9 +57,22 @@ class TaskManager:
             if task_file.exists():
                 with open(task_file, 'r', encoding='utf-8') as f:
                     tasks = json.load(f)
+
+                    # 如果设置了难度过滤,进行过滤
+                    if self.difficulty_filter:
+                        original_count = len(tasks)
+                        tasks = [
+                            task for task in tasks
+                            if task.get('overall_difficulty') in self.difficulty_filter
+                        ]
+                        filtered_count = len(tasks)
+                        print(f"加载 {env_name} 环境任务: {filtered_count} 个 "
+                              f"(过滤前: {original_count} 个, 难度: {', '.join(self.difficulty_filter)})")
+                    else:
+                        print(f"加载 {env_name} 环境任务: {len(tasks)} 个")
+
                     self.tasks[env_name] = tasks
                     self.task_count[env_name] = len(tasks)
-                    print(f"加载 {env_name} 环境任务: {len(tasks)} 个")
             else:
                 self.tasks[env_name] = []
                 self.task_count[env_name] = 0
@@ -82,10 +99,22 @@ class TaskManager:
         else:
             self.completed_tasks = []
 
+        # 加载已跳过任务列表
+        if self.skipped_file.exists():
+            with open(self.skipped_file, 'r', encoding='utf-8') as f:
+                self.skipped_tasks = json.load(f)
+        else:
+            self.skipped_tasks = []
+
         # 创建已完成任务的快速查找集合
         self.completed_task_ids = set()
         for task in self.completed_tasks:
             self.completed_task_ids.add(task["task_id"])
+
+        # 创建已跳过任务的快速查找集合
+        self.skipped_task_ids = set()
+        for task in self.skipped_tasks:
+            self.skipped_task_ids.add(task["task_id"])
 
     def _save_progress(self) -> None:
         """保存进度数据"""
@@ -96,6 +125,9 @@ class TaskManager:
 
         with open(self.completed_file, 'w', encoding='utf-8') as f:
             json.dump(self.completed_tasks, f, indent=2, ensure_ascii=False)
+
+        with open(self.skipped_file, 'w', encoding='utf-8') as f:
+            json.dump(self.skipped_tasks, f, indent=2, ensure_ascii=False)
 
     def get_next_task(self) -> Optional[Tuple[str, Dict[str, Any]]]:
         """
@@ -118,11 +150,13 @@ class TaskManager:
                     print(f"继续标注任务: {current_id}")
                     return current_env, task
 
-        # 寻找下一个未完成的任务
+        # 寻找下一个未完成且未跳过的任务
         for env_name, tasks in self.tasks.items():
             for task in tasks:
                 task_id_str = f"{env_name}_{task['task_id']}"
-                if task_id_str not in self.completed_task_ids:
+                # 排除已完成和已跳过的任务
+                if (task_id_str not in self.completed_task_ids and
+                    task_id_str not in self.skipped_task_ids):
                     # 设置为当前任务
                     self.progress["current_task_id"] = task_id_str
                     self.progress["current_environment"] = env_name
@@ -170,7 +204,22 @@ class TaskManager:
     def skip_current_task(self) -> None:
         """跳过当前任务"""
         if self.progress["current_task_id"]:
-            print(f"跳过任务: {self.progress['current_task_id']}")
+            task_id_str = self.progress["current_task_id"]
+            current_env = self.progress["current_environment"]
+
+            # 添加到已跳过列表
+            skipped_task = {
+                "task_id": task_id_str,
+                "environment": current_env,
+                "skipped_at": datetime.now().isoformat()
+            }
+
+            self.skipped_tasks.append(skipped_task)
+            self.skipped_task_ids.add(task_id_str)
+
+            print(f"跳过任务: {task_id_str}")
+
+            # 清空当前任务
             self.progress["current_task_id"] = None
             self.progress["current_environment"] = None
             self._save_progress()
@@ -185,26 +234,34 @@ class TaskManager:
         """获取进度摘要"""
         total_tasks = sum(self.task_count.values())
         completed_count = len(self.completed_tasks)
-        remaining_count = total_tasks - completed_count
+        skipped_count = len(self.skipped_tasks)
+        remaining_count = total_tasks - completed_count - skipped_count
 
         # 按环境统计已完成任务
         env_completed = {}
+        env_skipped = {}
         for env_name in self.tasks.keys():
             env_completed[env_name] = len([
                 t for t in self.completed_tasks
+                if t.get("environment", "") == env_name
+            ])
+            env_skipped[env_name] = len([
+                t for t in self.skipped_tasks
                 if t.get("environment", "") == env_name
             ])
 
         return {
             "总任务数": total_tasks,
             "已完成": completed_count,
+            "已跳过": skipped_count,
             "剩余": remaining_count,
             "完成率": f"{completed_count/total_tasks*100:.1f}%" if total_tasks > 0 else "0%",
             "按环境统计": {
                 env: {
                     "总数": self.task_count[env],
                     "已完成": env_completed.get(env, 0),
-                    "剩余": self.task_count[env] - env_completed.get(env, 0)
+                    "已跳过": env_skipped.get(env, 0),
+                    "剩余": self.task_count[env] - env_completed.get(env, 0) - env_skipped.get(env, 0)
                 }
                 for env in self.tasks.keys()
             },
