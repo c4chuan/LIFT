@@ -149,7 +149,7 @@ def analyze_data(data: List[Dict[str, Any]]) -> None:
 def main():
     parser = argparse.ArgumentParser(description='Read and analyze JSONL format training data')
     parser.add_argument('--file', '-f', type=str,
-                       default='sup_rollout_data_dir/600.jsonl',
+                       default='rollout_data/sup_rollout_wo_obs/200.jsonl',
                        help='JSONL file path')
     parser.add_argument('--parse', '-p', action='store_true',
                        help='Parse and display structured information for each entry')

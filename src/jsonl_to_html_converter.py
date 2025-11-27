@@ -617,9 +617,9 @@ def create_index_html(output_dir, converted_files):
 
 def main():
     parser = argparse.ArgumentParser(description='Convert JSONL rollout data to HTML visualization')
-    parser.add_argument('--input-dir', default='../sup_rollout_data_dir_1012',
+    parser.add_argument('--input-dir', default='../rollout_data/sup_rollout_wo_obs_1126_d',
                        help='Input directory containing JSONL files')
-    parser.add_argument('--output-dir', default='../sup_rollout_data_html_dir_1012',
+    parser.add_argument('--output-dir', default='../rollout_data/sup_rollout_wo_obs_1126_d_html',
                        help='Output directory for HTML files')
     parser.add_argument('--file-pattern', default='*.jsonl', 
                        help='File pattern to match (default: *.jsonl)')
