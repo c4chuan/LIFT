@@ -7,7 +7,7 @@ import asyncio
 from typing import List, Dict, Any, Optional
 from PIL import Image
 from pydantic import BaseModel
-
+from src.reward.reward_config import REWARD_PARAMS
 from src.config.environment_config import EnvironmentConfig
 from src.core.task_pool import TaskPool
 from src.core.message_builder import IMessageBuilder, ActionDescriptionHelper
@@ -463,7 +463,7 @@ class EnvironmentOrchestrator:
             )
             rewards.append(reward)
 
-        return [0.3*reward for reward in rewards]
+        return [REWARD_PARAMS['valid_action']*reward for reward in rewards]
 
     def collect_by_task_id(self, responses: List[Dict[Any,Any]],task_id: int) -> List[Dict[str, Any]]:
         """根据task_id找到对应的response"""

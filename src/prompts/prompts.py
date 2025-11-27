@@ -231,7 +231,7 @@ The actions can fall into several categories:
 
 Page Operation Actions:
 <action>click [id]</action>: This action clicks on an element with a specific id on the webpage.
-<action>type [id] [content]</action>: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., ```type [id] [content] [0]```.
+<action>type [id] [content]</action>: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., <action>type [id] [content] [0]</action>.
 <action>hover [id]</action>: Hover over an element with id.
 <action>press [key_comb]</action>: Simulates the pressing of a key combination on the keyboard (e.g., Ctrl+v).
 <action>scroll [down]</action> or <action>scroll [up]</action>: Scroll the page up or down.
@@ -259,7 +259,41 @@ To be successful, it is very important to follow the following rules:
 1. Your reasoning should be detailed and explain how you observe the page to reach the target action.
 2. Your reasoning should be logically clear with explicit steps.
 3. The content of each observation must be contained within <zoom in></zoom in> and <shift></shift>, your summary in <summary></summary> and your action should be contained within <action></action>.
-4. Your summary MUST explain why the target action is the correct next step."""
+4. Your summary MUST explain why the target action is the correct next step.""",
+	"LIFT_D":
+	"""Here's the information you'll have:
+The user's objective: This is the task you're trying to complete.
+The current web page screenshot: This is a screenshot of the webpage, with each interactable element assigned a unique numerical id. Each bounding box and its respective id shares the same color.
+The current web page's URL: This is the page you're currently navigating.
+The previous actions: These are the actions that have been performed. It may be helpful to track the progress.
+The target action: This is the ground truth action that should be performed next.
+
+The actions can fall into several categories:
+
+Page Operation Actions:
+<action>click [id]</action>: This action clicks on an element with a specific id on the webpage.
+<action>type [id] [content]</action>: Use this to type the content into the field with id. By default, the "Enter" key is pressed after typing unless press_enter_after is set to 0, i.e., <action>type [id] [content] [0]</action>.
+<action>hover [id]</action>: Hover over an element with id.
+<action>press [key_comb]</action>: Simulates the pressing of a key combination on the keyboard (e.g., Ctrl+v).
+<action>scroll [down]</action> or <action>scroll [up]</action>: Scroll the page up or down.
+
+Tab Management Actions:
+<action>new_tab</action>: Open a new, empty browser tab.
+<action>tab_focus [tab_index]</action>: Switch the browser's focus to a specific tab using its index.
+<action>close_tab</action>: Close the currently active tab.
+
+URL Navigation Actions:
+<action>goto [url]</action>: Navigate to a specific URL.
+<action>go_back</action>: Navigate to the previously viewed page.
+<action>go_forward</action>: Navigate to the next page (if a previous 'go_back' action was performed).
+
+Completion Action:
+<action>stop [answer]</action>: Issue this action when you believe the task is complete. If the objective is to find a text-based answer, provide the answer in the bracket.
+
+To be successful, it is very important to follow the following rules:
+1. You should directly output the action in the format of <action></action>.
+"""
+
 }
 EXAMPLES = {
     "original":
@@ -429,13 +463,24 @@ Observations so far:
 So the next action I will perform is type [7] [Washington] [0]
 </summary>
 
+<action>type [7] [Washington] [0]</action>
+""",
+				"image": """/data/wangzhenchuan/Projects/LIFT/data/example/example.png"""
+			}
+		],
+	"LIFT_D":
+		[{
+			"query": """URL: http://classifieds.com/index.php?page=search&sCategory=17
+OBJECTIVE: Explore the "Furniture" category of Washington, D.C. and find me the most recent blue chair.
+PREVIOUS ACTION: click [40] where [40] is [A] element with content [Cars+trucks]
+""",
+			"answer": """
 <action>
 type [7] [Washington] [0]
 </action>
 """,
-				"image": """/data/wangzhenchuan/Projects/LIFT/data/example/example.png"""
-			}
-		]
+			"image": """/data/wangzhenchuan/Projects/LIFT/data/example/example.png"""
+		}]
 }
 
 TEMPLATE = {

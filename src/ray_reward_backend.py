@@ -7,7 +7,8 @@ import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-from src.reward.rewarder import Rewarder,ChunkRewarder
+from contextlib import asynccontextmanager
+from src.reward.rewarder import Rewarder,ChunkRewarder,FormatOnlyRewarder
 from utils.scp_tools import parallel_scp
 # os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
 BASE_URL = "http://192.168.1.6:7333"
@@ -37,8 +38,8 @@ def init_ray(model_path: str, num_gpus: Optional[int] = None):
 @ray.remote(num_gpus=1)
 class RewarderActor:
     def __init__(self, model_path: str):
-        self.rewarder = ChunkRewarder(chunk_size=4200,model_path = model_path)
-
+        # self.rewarder = ChunkRewarder(chunk_size=4200,model_path = model_path)
+        self.rewarder = FormatOnlyRewarder(model_path)
     def reward(self, response: str, image_path: str, visualize: bool = False, visual_save: Optional[str] = None):
         return self.rewarder.reward(response, image_path, visualize, visual_save)
 
@@ -62,9 +63,23 @@ class BatchRequest(BaseModel):
 class BatchResponse(BaseModel):
     results: List[RewardResult]
 
-# Initialize FastAPI
-app = FastAPI()
+# Global actors list
 actors = []
+
+# Lifespan context manager
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    global actors
+    model_path = "/data/wangzhenchuan/models/Qwen2___5-VL-7B-Instruct"
+    actors = init_ray(model_path)
+    yield
+    # Shutdown (if needed)
+    if ray.is_initialized():
+        ray.shutdown()
+
+# Initialize FastAPI with lifespan
+app = FastAPI(lifespan=lifespan)
 
 def round_robin_dispatch(reqs, actors,new_image_paths):
     futures = []
@@ -81,14 +96,6 @@ def round_robin_dispatch(reqs, actors,new_image_paths):
         print("#"*15+f"RESPONSE{idx}:"+"#"*15)
         print(req.response)
     return futures
-
-@app.on_event("startup")
-def startup_event():
-    global actors
-    # Adjust the model path as needed
-    model_path = "/data/wangzhenchuan/models/Qwen2___5-VL-7B-Instruct"
-    init_ray(model_path)
-    actors = init_ray(model_path)
 
 @app.post("/rewards", response_model=BatchResponse)
 def get_rewards(batch: BatchRequest):

@@ -18,16 +18,16 @@ from src.utils.data_tools import supervise_dataset_construct
 # ============ 配置部分 ============
 initial_configs = Box({
     'max_num_envs': 8,
-    'initial_refresh_env': False,
+    'initial_refresh_env': True,
     'cache_dir': './.auth',
-    'env_name': 'classifieds',
+    'env_name': 'classifields',
     'results_dir': '/data/wangzhenchuan/Projects/LIFT/results',
-    'max_task_steps': 6,
+    'max_task_steps': 10,
     'scp_version': 'cmd',
     'type': 'remote',
     'target_server': '192.168.1.5',
-    'instruction_path': '/data/wangzhenchuan/Projects/LIFT/visualwebarena/src/prompts/vwa/jsons/lift.json',
-    'annotate_path': '../data/annotate_with_reasoning',
+    'instruction_path': '/data/wangzhenchuan/Projects/LIFT/visualwebarena/src/prompts/vwa/jsons/lift_d.json',
+    'annotate_path': '../data/annotate_with_reasoning_d',
     'annotate_envs': 'classifieds'
 })
 
@@ -79,20 +79,3 @@ app.include_router(router)
 # ============ 主入口 ============
 if __name__ == '__main__':
     uvicorn_run(app, host='0.0.0.0', port=7333)
-
-
-# ============ 代码对比 ============
-# 原代码：581行
-# 新代码：~60行（不含注释）
-#
-# 减少了约：90%的代码量
-#
-# 改进点：
-# 1. 职责分离：各组件各司其职
-# 2. 可测试性：所有组件都可以独立测试
-# 3. 可维护性：逻辑清晰，易于理解和修改
-# 4. 可扩展性：新增功能只需扩展对应组件
-# 5. 配置管理：使用Pydantic进行类型验证
-# 6. 错误处理：更好的异常处理机制
-# 7. 性能优化：字典查找替代列表查找（O(1) vs O(n)）
-# 8. 并发控制：更好的异步锁管理

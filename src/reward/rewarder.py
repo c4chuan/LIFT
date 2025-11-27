@@ -8,6 +8,7 @@ from src.prompts.prompts import EXAMPLES
 from ray.experimental.array.remote import zeros_like
 import wandb
 
+from src.reward.reward_config import REWARD_PARAMS
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor,AutoTokenizer,AutoModelForCausalLM
 from qwen_vl_utils import process_vision_info
 from src.utils.visualize_tools import show_mask_on_image, visualize_tensor_distribution, plot_1d_tensor
@@ -1140,7 +1141,7 @@ class ChunkRewarder(Rewarder):
 
         if len(obs_seq)== 0:
             # 如果没有观察序列，可以直接返回了
-            return 0,0,0.025*format_reward
+            return 0,0,format_reward
 
         # 4. 计算reward
         shift_reward,zoom_reward = self._compute_reward(obs_seq,processed_input,image_path,visualize,visual_save)
@@ -1150,7 +1151,7 @@ class ChunkRewarder(Rewarder):
             peak_mib = peak_bytes / (1024 ** 2)
             print(f"[Rewarder] Peak GPU memory during reward(): {peak_mib:.1f} MiB")
 
-        return shift_reward,zoom_reward,0.025*format_reward
+        return shift_reward,zoom_reward,format_reward
 
     def _aggregate_attentions(self,attn):
         """attn[0][0]是一个长度为层数的列表，每个元素是size为[1,28,N,N]的tensor
@@ -1613,6 +1614,63 @@ class ContainRewarder(ContainDisRewarder):
         shift_rewards, zoom_rewards = self._log_smooth(shift_rewards, zoom_rewards)
         return shift_rewards, zoom_rewards
 
+class FormatOnlyRewarder(ChunkRewarder):
+    """
+    轻量级奖励计算器，继承自 ChunkRewarder，但不加载任何模型。
+
+    特点：
+    - 不加载视觉-语言模型，初始化速度快，内存占用小
+    - 只计算格式奖励（format_reward）
+    - shift_reward 和 zoom_reward 始终返回 0
+    - 保持与 ChunkRewarder 相同的接口，可无缝替换
+
+    适用场景：
+    - 只需要检查响应格式的场景
+    - 不需要基于注意力机制计算奖励的场景
+    - 测试和调试环境
+
+    使用示例：
+        >>> rewarder = FormatOnlyRewarder(chunk_size=2000)
+        >>> shift_r, zoom_r, format_r = rewarder.reward(response, image_path)
+        >>> # shift_r = 0, zoom_r = 0, format_r 为实际计算的格式奖励
+    """
+
+    def __init__(self, chunk_size, *args, **kwargs):
+        """
+        初始化 FormatOnlyRewarder
+
+        参数:
+            chunk_size: 文本分块大小（保留此参数以维持接口兼容性）
+            *args, **kwargs: 其他参数（会被忽略，不传递给父类）
+
+        注意：
+            此类不调用父类的 __init__，因此不会加载任何模型。
+        """
+        # 不调用 super().__init__()，避免加载模型
+        self.chunk_size = chunk_size
+
+    def reward(self, response, image_path, visualize=False, visual_save=None):
+        """
+        计算奖励，只返回格式奖励
+
+        参数:
+            response: 模型输出的响应文本
+            image_path: 图像路径（此参数会被忽略）
+            visualize: 是否可视化（此参数会被忽略）
+            visual_save: 可视化保存路径（此参数会被忽略）
+
+        返回:
+            tuple: (shift_reward, zoom_reward, format_reward)
+                - shift_reward: 始终为 0
+                - zoom_reward: 始终为 0
+                - format_reward: 实际计算的格式奖励
+        """
+        # 只计算格式奖励
+        format_reward = format_reward_cal(response)
+
+        # shift_reward 和 zoom_reward 返回 0
+        return 0, 0, format_reward
+
 if __name__ == "__main__":
     import sys
     
@@ -1639,16 +1697,21 @@ click [32]
         # 示例：使用不同类型的 rewarder
         # rewarder = Rewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct", use_accelerate=True)
         # rewarder = ChunkRewarder(chunk_size=7200, model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct", use_accelerate=True)
-        rewarder = ContainDisRewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct", use_accelerate=True)
+        # rewarder = ContainDisRewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct", use_accelerate=True)
+        rewarder = FormatOnlyRewarder(chunk_size=9800)
     else:
         print("使用单卡模式...")
         # rewarder = ChunkRewarder(chunk_size=2000,model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
-        rewarder = Rewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
+        # rewarder = Rewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
+        rewarder = FormatOnlyRewarder(chunk_size=9800)
         # rewarder = ContainDisRewarder(model_path="/data/pretrained_models/Qwen2.5-VL-7B-Instruct")
 
-    print(rewarder.reward(e_text,
-                          image_path=image_path,
-                          visualize=True,
-                          visual_save='/data/wangzhenchuan/Projects/LIFT/visualize_attention_guitar_good',
-                          visualize_per_token=True,
-                          visualize_obs_indices = [0]))
+    print(rewarder.reward(e_text, image_path))
+    # print(rewarder.reward(e_text,
+    #                       image_path=image_path,
+    #                       visualize=True,
+    #                       visual_save='/data/wangzhenchuan/Projects/LIFT/visualize_attention_guitar_good',
+    #                       visualize_per_token=True,
+    #                       visualize_obs_indices = [0]))
+
+

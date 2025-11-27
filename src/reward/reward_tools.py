@@ -1,5 +1,5 @@
 import re
-
+from src.reward.reward_config import REWARD_PARAMS
 def action_format_reward(response):
     # find the first occurence of action
     pattern = rf"<action>((.|\n)*?)</action>"
@@ -225,7 +225,7 @@ def format_reward_cal(response):
     match = re.search(pattern, response)
     if match:
         format_reward += 1.0
-    return format_reward + action_format_reward(response)
+    return REWARD_PARAMS['xml_format']*format_reward + REWARD_PARAMS['action_format']*action_format_reward(response)
 
 if __name__ == "__main__":
     r = """

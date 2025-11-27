@@ -4,9 +4,9 @@ import json
 from src.prompts.prompts import GUIDANCE
 
 
-def get_examples():
+def get_examples(name='LIFT'):
     results = []
-    examples = EXAMPLES['LIFT']
+    examples = EXAMPLES[name]
     for example in examples:
         example_list = []
         example_list.append(example['query'])
@@ -18,14 +18,25 @@ def get_examples():
 
 if __name__ == "__main__":
     ref_json_path = "/data/wangzhenchuan/Projects/LIFT/visualwebarena/src/prompts/vwa/jsons/p_som_cot_id_actree_3s_final.json"
-    save_path = "/data/wangzhenchuan/Projects/LIFT/visualwebarena/src/prompts/vwa/jsons/lift.json"
+    save_path = "/data/wangzhenchuan/Projects/LIFT/visualwebarena/src/prompts/vwa/jsons/lift_d.json"
+
     ref_json = json.load(open(ref_json_path))
-    lift_json = {"intro": INTROS['LIFT'],
-                 "agent_intro": INTROS['LIFT'],
-                 "intro_w_reflections": INTROS['LIFT'],
-                 "intro_wo_icl": INTROS['LIFT'],
+    ref_json['meta_data']['action_splitter'] = "<action>"
+    # lift_json = {"intro": INTROS['LIFT'],
+    #              "agent_intro": INTROS['LIFT'],
+    #              "intro_w_reflections": INTROS['LIFT'],
+    #              "intro_wo_icl": INTROS['LIFT'],
+    #              "init_template": "OBSERVATION:{observation}\n URL: {url}\nOBJECTIVE: {objective}\nPREVIOUS ACTION: {previous_action}",
+    #              "template": "OBSERVATION:{observation}\n URL: {url}\nPREVIOUS ACTION: {previous_action}",
+    #              "meta_data": ref_json['meta_data'], 'examples': get_examples(), }
+    lift_direct_action_json = json.load(open(ref_json_path))
+    lift_json = {"intro": INTROS['LIFT_D'],
+                 "agent_intro": INTROS['LIFT_D'],
+                 "intro_w_reflections": INTROS['LIFT_D'],
+                 "intro_wo_icl": INTROS['LIFT_D'],
                  "init_template": "OBSERVATION:{observation}\n URL: {url}\nOBJECTIVE: {objective}\nPREVIOUS ACTION: {previous_action}",
                  "template": "OBSERVATION:{observation}\n URL: {url}\nPREVIOUS ACTION: {previous_action}",
-                 "meta_data": ref_json['meta_data'], 'examples': get_examples(), }
+                 "meta_data": ref_json['meta_data']
+                , 'examples': get_examples('LIFT_D'), }
     json.dump(lift_json, open(save_path, 'w'), indent=4)
 
